@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                 alt="Your Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${session.loggedUser.username}"></span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home" class="active">Home</a></li>
+                <li><a href="/profile">Profile</a></li>
+
+                <li><a th:href="@{/notifications}">Notifications</a></li>
+
+                <li>
+                    <a href="/inbox">
+                        Inbox
+
+                    </a>
+                </li>
+
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin">Admin Dashboard</a>
+                </li>
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin/users">Manage Users</a>
+                </li>
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin/posts">Manage Posts</a>
+                </li>
+
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main>
+    <section class="profile-container">
+        <!-- User Info Card -->
+        <div class="profile-card">
+            <h2>Current Profile Information</h2>
+
+            <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}" alt="Profile Picture" class="profile-pic">
+            <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
+            <p><strong>First Name:</strong> <span th:text="${user.firstName}"></span></p>
+            <p><strong>Last Name:</strong> <span th:text="${user.lastName}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>Bio:</strong> <span th:text="${user.bio}"></span></p>
+            <p><strong>Created At:</strong> <span th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy HH:mm')}"></span></p>
+            <p><strong>Last Updated At:</strong> <span th:text="${#temporals.format(user.updatedAt, 'dd MMM yyyy HH:mm')}"></span></p>
+
+            <!-- Updated Button -->
+            <a href="/edit-profile" class="button" id="edit-profile-button">Edit Profile</a>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 Social Media App. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

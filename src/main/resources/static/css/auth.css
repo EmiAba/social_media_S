@@ -1,0 +1,138 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    margin: 0;
+}
+.logo-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo {
+    display: inline-block;
+}
+
+.logo {
+    position: relative;
+    top: 20px;
+    left: 40px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+
+.auth-container {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 400px;
+    max-width: 90%;
+    margin: auto;
+}
+
+.auth-container h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.auth-container label {
+    font-size: 1rem;
+    color: #555;
+    display: block;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #f9f9f9;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container button {
+    background-color: #3b82f6;
+    border: 2px solid #0056b3;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: background-color 0.3s, border-color 0.3s;
+    width: 100%;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.auth-container button:hover {
+    background-color: #2563eb;
+    border-color: #004085;
+}
+
+.auth-container p {
+    margin-top: 15px;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.auth-container a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.auth-container a:hover {
+    color: #2563eb;
+}
+
+/* Footer */
+footer {
+    padding: 15px;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
+    font-size: 0.9rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    margin-top:40px;
+}
+.alert-warning {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    background: linear-gradient(to left, #f88e8e, #f56767, #f53b3b);
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+p.alert-warning {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    background: linear-gradient(to left, #f88e8e, #f56767, #f53b3b);
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 5px 0 0;
+}

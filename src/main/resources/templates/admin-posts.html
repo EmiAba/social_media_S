@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Posts</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+<header>
+    <h1>Manage Posts</h1>
+    <nav>
+        <ul>
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="/admin/users">Manage Users</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <table>
+        <tr>
+            <th>Content</th>
+            <th>Author</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="post : ${posts}">
+            <td th:text="${post.content}"></td>
+            <td th:text="${post.user.username}"></td>
+            <td th:text="${post.createdAt}"></td>
+            <td>
+                <form th:action="@{/admin/posts/delete/{id}(id=${post.id})}" th:method="post">
+
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</main>
+<footer>
+    <p>&copy; 2025 Social Media App. Admin Panel.</p>
+</footer>
+</body>
+</html>

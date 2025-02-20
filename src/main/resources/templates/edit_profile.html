@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                 alt="Your Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${session.loggedUser.username}"></span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home" class="active">Home</a></li>
+                <li><a href="/profile">Profile</a></li>
+
+                <li><a th:href="@{/notifications}">Notifications</a></li>
+
+                <li>
+                    <a href="/inbox">   Inbox</a>
+                </li>
+
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin">Admin Dashboard</a>
+                </li>
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin/users">Manage Users</a>
+                </li>
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin/posts">Manage Posts</a>
+                </li>
+
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<!-- Main Content -->
+<main>
+    <section class="profile-container">
+        <!-- Edit Profile Form Card -->
+        <div class="profile-card">
+            <h2>Edit Your Profile</h2>
+            <form th:action="@{'/{id}/profile'(id=${user.id})}" method="post" th:object="${userEditRequest}">
+                <input type="hidden" name="_method" value="PUT">
+
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" th:field="*{firstName}" placeholder="Enter first name">
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" th:field="*{lastName}" placeholder="Enter last name">
+
+
+                <label for="profilePicture">Profile Picture URL:</label>
+                <input type="text" id="profilePicture" name="profilePicture" th:field="*{profilePicture}" placeholder="Enter profile picture URL">
+
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio" th:field="*{bio}" ></textarea>
+
+                <button type="submit" class="save-button">Save Changes</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 Social Media App. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

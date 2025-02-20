@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Homepage</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                 alt="Your Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${session.loggedUser.username}"></span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home" class="active">Home</a></li>
+                <li><a href="/profile">Profile</a></li>
+
+                <li><a th:href="@{/notifications}">Notifications</a></li>
+
+                <li>
+                    <a href="/inbox">
+                        Inbox
+                        <span th:if="${unreadMessageCount > 0}" class="message-badge"
+                              th:text="${unreadMessageCount}"></span>
+                    </a>
+                </li>
+
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin">Admin Dashboard</a>
+                </li>
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin/users">Manage Users</a>
+                </li>
+                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                    <a href="/admin/posts">Manage Posts</a>
+                </li>
+
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main>
+    <div class="main-container">
+        <!-- Left Sidebar -->
+
+        <aside class="left-sidebar">
+            <div class="user-profile-card">
+                <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                     alt="Profile Picture">
+                <h3 th:text="${session.loggedUser.username}"></h3>
+                <p class="bio" th:text="${session.loggedUser.bio ?: 'No bio yet'}">Your bio here</p>
+            </div>
+        </aside>
+
+        <!-- Main Feed -->
+        <section class="main-feed">
+            <!-- Create Post Section -->
+            <div class="create-post">
+                <div class="post-form-header">
+                    <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                         alt="Your Profile" class="post-user-pic">
+                    <h2>Create a Post</h2>
+                </div>
+                <form th:action="@{/posts/create}" th:method="POST" th:object="${postRequest}" class="post-form">
+                    <div class="post-type-selector">
+                        <label>Post Type:</label>
+                        <select name="postType" required>
+                            <option value="SHORT">Short Post (Max 250 chars)</option>
+                            <option value="LONG">Long Post</option>
+                        </select>
+                    </div>
+
+                    <textarea name="content" placeholder="What's on your mind?" required maxlength="5000"></textarea>
+
+                    <div class="post-options">
+                        <div class="image-upload">
+                            <label for="imageUrl">Add Image URL:</label>
+                            <input type="text" id="imageUrl" name="imageUrl"
+                                   placeholder="Enter image URL (e.g., https://example.com/image.jpg)">
+                        </div>
+                        <button type="submit" class="post-button">Post</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Posts Feed -->
+            <div class="posts-container">
+                <div th:each="post : ${posts}" class="post-card">
+                    <!-- Post Header -->
+                    <div class="post-header">
+                        <div class="post-user-info">
+                            <img th:src="${#strings.isEmpty(post.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : post.profilePicture}"
+                                 alt="Profile Picture" class="post-profile-pic">
+                            <div class="post-meta">
+                                <a th:href="@{/profile/{userId}(userId=${post.userId})}"
+                                   class="username" th:text="${post.username}"></a>
+                                <span class="post-time"
+                                      th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy HH:mm')}">
+                                    </span>
+                            </div>
+                        </div>
+                        <div class="post-type-badge" th:text="${post.postType}"></div>
+                    </div>
+
+                    <!-- Post Content -->
+                    <div class="post-content">
+                        <p th:text="${post.content}"></p>
+                        <img th:if="${not #strings.isEmpty(post.imageUrl)}"
+                             th:src="${post.imageUrl}"
+                             alt="Post Image"
+                             class="post-image"
+                             onerror="this.style.display='none'">
+                    </div>
+                    <!-- Like Section -->
+                    <div class="post-actions">
+                        <button class="like-button"
+                                th:data-post-id="${post.id}"
+                                th:class="${post.isLikedByUser ? 'like-button liked' : 'like-button'}"
+                                onclick="toggleLike(this)">
+                            <span class="like-icon" th:text="${post.isLikedByUser ? '❤️' : '🤍'}"></span>
+                            <span class="like-count">0</span>
+                        </button>
+                    </div>
+
+
+                    <!-- Comments Section -->
+                    <div class="comments-section">
+                        <!-- Existing Comments -->
+                        <div th:if="${not #lists.isEmpty(post.comments)}" class="comments-list">
+                            <div th:each="comment : ${post.comments}" class="comment">
+                                <div class="comment-header">
+                                    <img th:src="${#strings.isEmpty(comment.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : comment.profilePicture}"
+                                         alt="Commenter Profile" class="comment-profile-pic">
+                                    <div class="comment-meta">
+                                        <a th:href="@{/profile/{username}(username=${comment.username})}"
+                                           class="comment-username" th:text="${comment.username}"></a>
+                                        <span class="comment-time"
+                                              th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy HH:mm')}">
+                                            </span>
+                                    </div>
+                                </div>
+                                <div class="comment-content" th:text="${comment.content}"></div>
+                            </div>
+                        </div>
+
+                        <!-- No Comments Message -->
+                        <div th:if="${#lists.isEmpty(post.comments)}" class="no-comments">
+                            <p>No comments yet. Be the first to comment!</p>
+                        </div>
+
+                        <!-- Add Comment Form -->
+                        <form th:action="@{/comments/add}" th:method="POST" class="comment-form">
+                            <div class="comment-form-content">
+                                <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                                     alt="Your Profile" class="comment-user-pic">
+                                <textarea name="content" placeholder="Write a comment..." required></textarea>
+                            </div>
+                            <input type="hidden" name="postId" th:value="${post.id}" />
+                            <button type="submit" class="comment-submit">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <!-- Suggested Users -->
+
+            <section class="suggested-users">
+                <h3>Suggested Users</h3>
+                <div class="user-suggestions">
+                    <div th:if="${not #lists.isEmpty(suggestedUsers)}" th:each="user : ${suggestedUsers}" class="suggested-user">
+                        <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
+                             alt="User Profile" class="suggestion-profile-pic">
+                        <div class="suggestion-info">
+                            <a th:href="@{/profile/{userId}(userId=${user.id})}"
+                               class="suggestion-username" th:text="${user.username}"></a>
+                            <form th:action="@{/follow/{userId}(userId=${user.id})}" method="POST" class="follow-form">
+                                <button type="submit" class="follow-button">Follow</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div th:if="${#lists.isEmpty(suggestedUsers)}" class="no-suggestions">
+                        <p>No suggestions available</p>
+                    </div>
+                </div>
+            </section>
+            <!-- Online Friends -->
+            <section class="online-friends">
+                <h3>Online Friends</h3>
+                <div class="friends-list">
+                    <div th:each="friend : ${followedUsers}" class="friend-item">
+                        <img th:src="${#strings.isEmpty(friend.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : friend.profilePicture}"
+                             alt="Friend Profile" class="friend-profile-pic">
+                        <div class="friend-info">
+                            <span class="friend-name" th:text="${friend.username}"></span>
+                            <span class="online-status"
+                                  th:text="${friend.online ? '🟢 Online' : '🔴 Offline'}"></span>
+                        </div>
+                        <a th:href="@{/inbox/{friendId}(friendId=${friend.id})}"
+                           class="message-friend">💬</a>
+                    </div>
+                </div>
+            </section>
+        </aside>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2025 Social Media App. All rights reserved.</p>
+        <!--  <nav class="footer-links">
+              <a href="/about">About</a>
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/terms">Terms of Service</a>
+              <a href="/contact">Contact Us</a>
+          </nav>-->
+      </div>
+  </footer>
+
+<script>
+
+    const formatCount = count => count >= 1e6 ? (count / 1e6).toFixed(1) + 'M' : count >= 1e3 ? (count / 1e3).toFixed(1) + 'K' : count.toString();
+
+    const toggleLike = button => {
+        const postId = button.dataset.postId, likeIcon = button.querySelector('.like-icon'), likeCount = button.querySelector('.like-count');
+
+        fetch(`/api/likes/${postId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
+            .then(res => res.ok ? res.json() : res.status === 401 ? (window.location.href = '/login') : Promise.reject('Error'))
+            .then(data => {
+                button.classList.toggle('liked', data.liked);
+                likeIcon.textContent = data.liked ? '❤️' : '🤍';
+                likeCount.textContent = formatCount(data.likeCount);
+                if (data.liked) likeIcon.classList.add('like-animation'), setTimeout(() => likeIcon.classList.remove('like-animation'), 300);
+            })
+            .catch(console.error);
+    };
+
+    const updateLikeCount = (postId, button) => {
+        fetch(`/api/likes/${postId}/count`)
+            .then(res => res.json())
+            .then(count => button.querySelector('.like-count').textContent = formatCount(count))
+            .catch(console.error);
+    };
+
+    document.addEventListener('DOMContentLoaded', () =>
+        document.querySelectorAll('.like-button').forEach(button => updateLikeCount(button.dataset.postId, button))
+    );
+
+</script>
+
+  </body>
+  </html>

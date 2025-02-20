@@ -1,0 +1,255 @@
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Header Styles */
+.header-content {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
+    text-align: center;
+}
+
+.user-welcome {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+header nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+main {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Message List Styles */
+.message-list {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.message-list h3 {
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Message Card Styles */
+.message-item {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.sender-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c5282;
+}
+
+.message-time {
+    color: #666;
+    font-size: 14px;
+}
+
+.message-content {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+    padding: 10px 0;
+}
+
+.message-content p {
+    margin: 0;
+}
+
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+}
+
+.reply-button {
+    background-color: #4299e1;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.reply-button:hover {
+    background-color: #3182ce;
+}
+
+/* Send Message Button */
+.new-message {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.new-message a,
+.button {
+    background: #4299e1;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
+.new-message a:hover,
+.button:hover {
+    background: #3182ce;
+}
+
+/* Form Styles */
+form {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+form label {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+form button {
+    background: #4299e1;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    border: none;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+form button:hover {
+    background: #3182ce;
+}
+
+/* No Messages State */
+.no-messages {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    color: #666;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    margin-top: auto;
+}
+
