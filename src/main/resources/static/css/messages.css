@@ -1,4 +1,4 @@
-
+/* General Styles */
 body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #07076e, #6e96e5);
@@ -18,6 +18,7 @@ body {
     background: linear-gradient(135deg, #07076e, #6e96e5);
     color: #fff;
     text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .user-welcome {
@@ -31,6 +32,7 @@ body {
     height: 40px;
     border-radius: 50%;
     border: 2px solid white;
+    object-fit: cover;
 }
 
 header nav ul {
@@ -44,7 +46,7 @@ header nav ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    padding: 5px 10px;
+    padding: 8px 12px;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
@@ -52,6 +54,8 @@ header nav ul li a {
 header nav ul li a:hover {
     background: rgba(255, 255, 255, 0.1);
 }
+
+/* Main Content */
 main {
     flex: 1;
     padding: 20px;
@@ -65,10 +69,10 @@ main {
 
 h2 {
     color: white;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 /* Message List Styles */
@@ -80,34 +84,37 @@ h2 {
 
 .message-list h3 {
     font-size: 20px;
-    color: #fff;
+    color: white;
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 /* Message Card Styles */
 .message-item {
     background: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     width: 100%;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 .message-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
+/* Message Header */
 .message-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
 }
 
 .sender-name {
@@ -117,52 +124,78 @@ h2 {
 }
 
 .message-time {
-    color: #666;
+    color: #777;
     font-size: 14px;
 }
 
+/* Message Content */
 .message-content {
     font-size: 16px;
     color: #333;
     line-height: 1.5;
-    padding: 10px 0;
+    padding: 8px 0;
 }
 
 .message-content p {
     margin: 0;
 }
 
+/* Message Actions */
 .message-actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
     padding-top: 10px;
 }
 
+/* Reply Button */
 .reply-button {
-    background-color: #4299e1;
+    background-color: #007BFF;
     color: white;
-    padding: 8px 20px;
+    padding: 8px 14px;
     border-radius: 6px;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: bold;
     font-size: 14px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
+    border: none;
+    cursor: pointer;
 }
 
 .reply-button:hover {
-    background-color: #3182ce;
+    background-color: #0056b3;
+    transform: scale(1.05);
 }
 
-/* Send Message Button */
+/* Delete Button */
+.delete-message-btn {
+    background:#2c5282;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.delete-message-btn:hover {
+    background: #C62828;
+    transform: scale(1.05);
+}
+
+
 .new-message {
     width: 100%;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .new-message a,
 .button {
-    background: #4299e1;
+    background: #007BFF;
     color: white;
     padding: 12px 25px;
     border-radius: 8px;
@@ -170,86 +203,120 @@ h2 {
     font-weight: bold;
     font-size: 16px;
     display: inline-block;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .new-message a:hover,
 .button:hover {
-    background: #3182ce;
-}
-
-/* Form Styles */
-form {
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-form label {
-    font-size: 16px;
-    color: #333;
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-form input,
-form textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-size: 15px;
-    color: #333;
-    box-sizing: border-box;
-}
-
-form textarea {
-    min-height: 150px;
-    resize: vertical;
-}
-
-form button {
-    background: #4299e1;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 6px;
-    border: none;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-form button:hover {
-    background: #3182ce;
+    background: #0056b3;
+    transform: scale(1.05);
 }
 
 /* No Messages State */
 .no-messages {
     text-align: center;
-    padding: 30px;
+    padding: 20px;
     background: white;
-    border-radius: 10px;
+    border-radius: 8px;
     color: #666;
     font-size: 16px;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 /* Footer */
 footer {
     background: linear-gradient(135deg, #07076e, #6e96e5);
-    color: #fff;
+    color: white;
     text-align: center;
     padding: 15px;
     margin-top: auto;
+}
+/* Message Form Container */
+.message-form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+/* Form Header */
+h2 {
+    color: #333;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.messages-title {
+    color: white ;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    font-size: 18px;
+    color: #333;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 18px;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+
+.readonly-field {
+    background: #2c5282;
+    color: white !important;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+
+textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+/* Send Button */
+.send-message-btn {
+    background: #007BFF;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+}
+
+.send-message-btn:hover {
+    background: #0056b3;
+    transform: scale(1.05);
 }
 

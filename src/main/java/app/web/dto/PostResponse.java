@@ -25,8 +25,7 @@ public class PostResponse {
     private LocalDateTime createdAt;
     private List<CommentResponse> comments;
     private String profilePicture;
-   // private List<LikeAct> likes;
-    private boolean isLikedByUser;
+     private boolean isLikedByUser;
     private long likeCount;
 
         }

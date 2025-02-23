@@ -20,16 +20,15 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final UserService userService;
-    private final NotificationService notificationService;
+
 
     @Autowired
     public MessageService(
             MessageRepository messageRepository,
-            UserService userService,
-            NotificationService notificationService) {
+            UserService userService) {
         this.messageRepository = messageRepository;
         this.userService = userService;
-        this.notificationService = notificationService;
+
     }
 
     public List<Message> getReceivedMessages(UUID userId) {
@@ -48,7 +47,6 @@ public class MessageService {
     }
 
     public void saveMessage(String receiverUsername, String content, User sender) {
-
         if (receiverUsername == null || receiverUsername.trim().isEmpty()) {
             throw new DomainException("Receiver username cannot be empty");
         }
@@ -69,8 +67,24 @@ public class MessageService {
         messageRepository.save(message);
 
 
-        notificationService.createMessageNotification(receiver, sender.getUsername());
+
     }
+
+    public void deleteMessage(UUID messageId, UUID userId) {
+        Optional<Message> messageOpt = messageRepository.findById(messageId);
+        if (messageOpt.isPresent()) {
+            Message message = messageOpt.get();
+            if (message.getReceiver().getId().equals(userId)) {
+                messageRepository.deleteById(messageId);
+            } else {
+                throw new DomainException("You can only delete messages from your inbox.");
+            }
+        } else {
+            throw new DomainException("Message not found.");
+        }
+    }
+
+
 
     public boolean hasUnreadMessages(UUID userId) {
         return getUnreadMessageCount(userId) > 0;

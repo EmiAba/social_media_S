@@ -2,59 +2,41 @@ package app.web;
 
 import app.like.service.LikeActService;
 import app.user.model.User;
-import app.web.dto.LikeResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@RestController
-@RequestMapping("/api/likes")
+@Controller
+@RequestMapping("/likes")
 public class LikeActController {
     private final LikeActService likeActService;
 
+    @Autowired
     public LikeActController(LikeActService likeActService) {
         this.likeActService = likeActService;
     }
 
-    @PostMapping("/{postId}")
-    public ResponseEntity<LikeResponse> toggleLike(@PathVariable UUID postId, HttpSession session) {
+    @PostMapping("/{postId}/toggle")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable UUID postId, HttpSession session) {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null) {
-            return ResponseEntity.status(401)
-                    .body(new LikeResponse(false, 0L, "Unauthorized"));
+            return ResponseEntity.status(401).build();
         }
 
         boolean liked = likeActService.toggleLike(postId, loggedUser);
-        long updatedCount = likeActService.countLikes(postId);
+        long likeCount = likeActService.countLikes(postId);
 
-        return ResponseEntity.ok(new LikeResponse(
-                liked,
-                updatedCount,
-                liked ? "Liked" : "Unliked"
-        ));
-    }
+        Map<String, Object> response = new HashMap<>();
+        response.put("liked", liked);
+        response.put("likeCount", likeCount);
 
-    @GetMapping("/{postId}/count")
-    public ResponseEntity<Long> getLikeCount(@PathVariable UUID postId) {
-        return ResponseEntity.ok(likeActService.countLikes(postId));
-    }
-
-    @GetMapping("/{postId}/status")
-    public ResponseEntity<Boolean> getLikeStatus(@PathVariable UUID postId, HttpSession session) {
-        User loggedUser = (User) session.getAttribute("loggedUser");
-        if (loggedUser == null) {
-            return ResponseEntity.status(401).body(false);
-        }
-
-        return ResponseEntity.ok(likeActService.hasUserLikedPost(postId, loggedUser));
-    }
-
-    @GetMapping("/counts")
-    public ResponseEntity<Map<UUID, Long>> getBatchLikeCounts(@RequestParam List<UUID> postIds) {
-        return ResponseEntity.ok(likeActService.getLikeCountsForPosts(postIds));
+        return ResponseEntity.ok(response);
     }
 }

@@ -57,7 +57,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("/users/delete/{id}")
+    @DeleteMapping("/users/delete/{id}")
     public ModelAndView deleteUser(@PathVariable UUID id) {
         userRepository.deleteById(id);
         return new ModelAndView("redirect:/admin/users");
@@ -93,7 +93,7 @@ public class AdminController {
     }
 
     
-    @PostMapping("/posts/delete/{id}")
+    @DeleteMapping("/posts/delete/{id}")
     public ModelAndView deletePost(@PathVariable UUID id) {
         postRepository.deleteById(id);
         return new ModelAndView("redirect:/admin/posts");

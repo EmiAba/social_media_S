@@ -30,7 +30,7 @@
             <td th:text="${post.createdAt}"></td>
             <td>
                 <form th:action="@{/admin/posts/delete/{id}(id=${post.id})}" th:method="post">
-
+                    <input type="hidden" name="_method" value="DELETE">
                     <button type="submit">Delete</button>
                 </form>
             </td>

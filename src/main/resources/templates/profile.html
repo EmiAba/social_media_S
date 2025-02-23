@@ -33,12 +33,6 @@
                 <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
-                    <a href="/admin/users">Manage Users</a>
-                </li>
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
-                    <a href="/admin/posts">Manage Posts</a>
-                </li>
 
                 <li><a href="/logout">Logout</a></li>
             </ul>

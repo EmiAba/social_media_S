@@ -34,7 +34,7 @@ public class LikeActService {
             likeActRepository.delete(existingLike.get());
             return false;
         } else {
-            // Like the post
+
             LikeAct likeAct = LikeAct.builder()
                     .user(user)
                     .post(post)

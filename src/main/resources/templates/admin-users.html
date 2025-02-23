@@ -30,8 +30,10 @@
             <td th:text="${user.role}"></td>
             <td>
                 <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
                     <button type="submit">Delete</button>
                 </form>
+
                 <form th:action="@{/admin/users/make-admin/{id}(id=${user.id})}" method="post" th:if="${user.role.name() == 'USER'}">
                     <button type="submit">Make Admin</button>
                 </form>

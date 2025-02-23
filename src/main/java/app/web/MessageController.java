@@ -100,16 +100,30 @@ public class MessageController {
             return new ModelAndView("redirect:/login");
         }
 
-
         Optional<User> recipientOpt = userService.getUserByUsername(messageRequest.getUsername());
         if (recipientOpt.isPresent()) {
             User recipient = recipientOpt.get();
+
             messageService.saveMessage(messageRequest.getUsername(), messageRequest.getContent(), sender);
 
 
+            System.out.println("Creating notification for message from " + sender.getUsername() + " to " + recipient.getUsername());
             notificationService.createMessageNotification(recipient, sender.getUsername());
         }
 
         return new ModelAndView("redirect:/inbox");
     }
+
+    @DeleteMapping("/inbox/delete/{messageId}")
+    public ModelAndView deleteMessage(@PathVariable UUID messageId, HttpSession session) {
+        User user = (User) session.getAttribute("loggedUser");
+        if (user == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        messageService.deleteMessage(messageId, user.getId());
+
+        return new ModelAndView("redirect:/inbox");
+    }
+
 }

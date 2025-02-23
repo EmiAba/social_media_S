@@ -19,21 +19,11 @@
             <ul>
                 <li><a href="/home" class="active">Home</a></li>
                 <li><a href="/profile">Profile</a></li>
-
                 <li><a th:href="@{/notifications}">Notifications</a></li>
-
-                <li> <a href="/inbox"> Inbox </a>  </li>
-
+                <li><a href="/inbox">Inbox</a></li>
                 <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
-                    <a href="/admin/users">Manage Users</a>
-                </li>
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
-                    <a href="/admin/posts">Manage Posts</a>
-                </li>
-
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -42,30 +32,33 @@
 
 <!-- Main Content -->
 <main>
-    <h2>Send Message to <span th:text="${recipient != null ? recipient.username : ''}"></span></h2>
+    <div class="message-form-container">
+        <h2>Send Message to <span th:text="${recipient != null ? recipient.username : ''}"></span></h2>
 
-    <!-- Send Message Form -->
-    <form th:action="@{/send}" th:object="${messageRequest}" method="post">
-        <!-- Hidden input if recipient is pre-selected -->
-        <div th:if="${recipient != null}" class="form-group">
-            <input type="hidden" th:field="*{username}">
-        </div>
+        <!-- Send Message Form -->
+        <form th:action="@{/send}" th:object="${messageRequest}" method="post">
 
-        <!-- Visible input if no recipient is pre-selected -->
-        <div th:if="${recipient == null}" class="form-group">
-            <label for="receiverUsername">Receiver Username:</label>
-            <input type="text" th:field="*{username}" id="receiverUsername" required>
-        </div>
+            <div th:if="${recipient != null}" class="form-group">
+                <input type="hidden" th:field="*{username}">
+                <input type="text" th:value="${recipient.username}" class="readonly-field" readonly>
+            </div>
 
-        <div class="form-group">
-            <label for="content">Message:</label>
-            <textarea th:field="*{content}" id="content"
-                      placeholder="Type your message here..."
-                      required></textarea>
-        </div>
 
-        <button type="submit">Send Message</button>
-    </form>
+            <div th:if="${recipient == null}" class="form-group">
+                <label for="receiverUsername">Receiver Username:</label>
+                <input type="text" th:field="*{username}" id="receiverUsername" required>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Message:</label>
+                <textarea th:field="*{content}" id="content"
+                          placeholder="Type your message here..."
+                          required></textarea>
+            </div>
+
+            <button type="submit" class="send-message-btn">Send Message</button>
+        </form>
+    </div>
 </main>
 
 <!-- Footer -->

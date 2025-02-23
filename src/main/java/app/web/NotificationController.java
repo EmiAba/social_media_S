@@ -4,7 +4,6 @@ import app.notification.model.Notification;
 import app.notification.service.NotificationService;
 import app.user.model.User;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +17,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
+
     public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;
     }
@@ -30,45 +30,56 @@ public class NotificationController {
         }
 
         List<Notification> notifications = notificationService.getUserNotifications(user);
-
+        int unreadCount = notificationService.getUnreadCount(user);
 
         model.addAttribute("notifications", notifications);
+        model.addAttribute("unreadNotificationCount", unreadCount);
+
         return "notifications";
     }
 
     @PostMapping("/{id}/read")
     @ResponseBody
-    public ResponseEntity<Void> markAsRead(@PathVariable UUID id, HttpSession session) {
+    public int markAsRead(@PathVariable UUID id, HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) {
-            return ResponseEntity.status(401).build();
+            return 0;
         }
 
         notificationService.markAsRead(id);
-        return ResponseEntity.ok().build();
+        return notificationService.getUnreadCount(user);
     }
 
     @PostMapping("/read-all")
     @ResponseBody
-    public ResponseEntity<Void> markAllAsRead(HttpSession session) {
+    public int markAllAsRead(HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) {
-            return ResponseEntity.status(401).build();
+            return 0;
         }
 
         notificationService.markAllAsRead(user);
-        return ResponseEntity.ok().build();
+        return 0;
     }
 
     @GetMapping("/unread-count")
     @ResponseBody
-    public ResponseEntity<Integer> getUnreadCount(HttpSession session) {
+    public int getUnreadCount(HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) {
-            return ResponseEntity.status(401).build();
+            return 0;
         }
 
-        int count = notificationService.getUnreadCount(user);
-        return ResponseEntity.ok(count);
+        return notificationService.getUnreadCount(user);
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteNotification(@PathVariable UUID id, HttpSession session) {
+        User user = (User) session.getAttribute("loggedUser");
+        if (user != null) {
+            notificationService.deleteNotification(id);
+        }
+        return "redirect:/notifications";
+    }
+
 }

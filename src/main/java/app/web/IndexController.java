@@ -2,6 +2,7 @@ package app.web;
 
 import app.follow.service.FollowService;
 import app.message.service.MessageService;
+import app.notification.service.NotificationService;
 import app.post.service.PostService;
 import app.user.model.User;
 import app.user.service.UserService;
@@ -22,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -32,13 +32,15 @@ public class IndexController {
     private final PostService postService;
     private final MessageService messageService;
     private final FollowService followService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public IndexController(UserService userService, PostService postService, MessageService messageService, FollowService followService) {
+    public IndexController(UserService userService, PostService postService, MessageService messageService, FollowService followService, NotificationService notificationService) {
         this.userService = userService;
         this.postService = postService;
         this.messageService = messageService;
         this.followService = followService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/")
@@ -101,6 +103,8 @@ public class IndexController {
         modelAndView.addObject("unreadMessageCount", unreadMessageCount);
         modelAndView.addObject("suggestedUsers", suggestedUsers);
         modelAndView.addObject("followedUsers", followedUsers);
+        int unreadNotifications = notificationService.getUnreadCount(user);
+        modelAndView.addObject("unreadNotificationCount", unreadNotifications);
 
         return modelAndView;
     }

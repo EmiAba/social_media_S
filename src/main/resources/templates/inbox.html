@@ -11,7 +11,9 @@
 <header>
     <div class="header-content">
         <div class="user-welcome">
-            <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+            <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ?
+                          'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png'
+                          : session.loggedUser.profilePicture}"
                  alt="Your Profile" class="header-profile-pic">
             <h1>Welcome, <span th:text="${session.loggedUser.username}"></span></h1>
         </div>
@@ -19,21 +21,11 @@
             <ul>
                 <li><a href="/home" class="active">Home</a></li>
                 <li><a href="/profile">Profile</a></li>
-
                 <li><a th:href="@{/notifications}">Notifications</a></li>
-
-                <li> <a href="/inbox"> Inbox </a>  </li>
-
+                <li><a href="/inbox">Inbox</a></li>
                 <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
-                    <a href="/admin/users">Manage Users</a>
-                </li>
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
-                    <a href="/admin/posts">Manage Posts</a>
-                </li>
-
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -42,22 +34,20 @@
 
 <!-- Main Content -->
 <main>
-    <h2>Your Messages</h2>
+    <h2 class="messages-title">Your Messages</h2>
 
 
     <div class="new-message">
         <a href="/send_message" class="button">Send a New Message</a>
     </div>
 
-    <!-- Message List -->
+
     <section class="message-list">
         <h3>Inbox</h3>
-
 
         <div th:if="${#lists.isEmpty(messages)}" class="no-messages">
             <p>No messages in your inbox.</p>
         </div>
-
 
         <ul th:if="${not #lists.isEmpty(messages)}">
             <li th:each="message : ${messages}" class="message-item">
@@ -71,6 +61,12 @@
                     </div>
                     <div class="message-actions">
                         <a th:href="@{/inbox/{userId}(userId=${message.sender.id})}" class="reply-button">Reply</a>
+
+
+                        <form th:action="@{/inbox/delete/{messageId}(messageId=${message.id})}" method="post">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="delete-message-btn">🗑 Delete</button>
+                        </form>
                     </div>
                 </div>
             </li>
@@ -82,7 +78,6 @@
 <footer>
     <p>&copy; 2025 Social Media App. All rights reserved.</p>
 </footer>
-
 
 </body>
 </html>

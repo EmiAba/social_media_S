@@ -1,4 +1,4 @@
-
+/* Base Styles */
 body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #07076e, #6e96e5);
@@ -7,6 +7,22 @@ body {
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 15px;
+    margin: 20px auto;
+    border-radius: 10px;
+    max-width: 600px;
+    text-align: center;
+    background: white;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
 }
 
 /* Header Styles */
@@ -93,17 +109,6 @@ header nav ul li a:hover {
     margin: 10px 0;
 }
 
-.edit-profile-btn {
-    display: inline-block;
-    background: #4e54c8;
-    color: white;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    margin-top: 10px;
-    transition: background-color 0.3s;
-}
-
 /* Main Feed */
 .main-feed {
     background: transparent;
@@ -167,6 +172,11 @@ header nav ul li a:hover {
     cursor: pointer;
     font-weight: bold;
     align-self: flex-end;
+    transition: background-color 0.3s;
+}
+
+.post-button:hover {
+    background: #3b42a1;
 }
 
 /* Post Card */
@@ -234,23 +244,507 @@ header nav ul li a:hover {
     object-fit: cover;
 }
 
-/* Post Actions */
+/* Like Section Styles */
 .post-actions {
-    padding: 10px 15px;
+    padding: 12px 15px;
+    border-top: 1px solid #eee;
     display: flex;
-    gap: 15px;
+    align-items: center;
+}
+
+.like-form {
+    display: inline-block;
+}
+
+.like-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.like-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.like-icon {
+    font-size: 18px;
+}
+
+.like-count {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.like-button.liked .like-icon {
+    color: #e41e3f;
+}
+
+.like-button.liked .like-count {
+    color: #e41e3f;
+}
+
+/* Comments Section */
+.comments-section {
+    background: #f8f9fa;
+    padding: 15px;
     border-top: 1px solid #eee;
 }
 
-.like-button,
-.comment-toggle-button,
-.share-button {
+.comment {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.comment-profile-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.comment-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-username {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.comment-time {
+    color: #666;
+    font-size: 12px;
+}
+
+.comment-content {
+    color: #333;
+    margin-left: 42px;
+}
+
+.comment-form {
+    margin-top: 15px;
+}
+
+.comment-form-content {
+    display: flex;
+    gap: 10px;
+}
+
+.comment-user-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.comment-form textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.comment-submit {
+    background: #4e54c8;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 42px;
+    transition: background-color 0.3s;
+}
+
+.comment-submit:hover {
+    background: #3b42a1;
+}
+
+/* Right Sidebar */
+.right-sidebar section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.right-sidebar h3 {
+    color: #333;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.suggested-user,
+.friend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    color: black;
+}
+
+.suggestion-profile-pic,
+.friend-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.suggestion-info,
+.friend-info {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.suggestion-username {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.follow-form {
+    margin-top: 5px;
+}
+
+.follow-button {
+    background: #4e54c8;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.follow-button:hover {
+    background: #3b42a1;
+}
+
+.message-friend {
+    background-color: #f1f1f1;
+    color: black;
+    font-weight: normal;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.no-suggestions {
+    text-align: center;
+    padding: 15px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 15px;
+    margin: 20px auto;
+    border-radius: 10px;
+    max-width: 600px;
+    text-align: center;
+    background: white;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+/* Header Styles */
+.header-content {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
+    text-align: center;
+}
+
+.user-welcome {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+header nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Container Layout */
+.main-container {
+    display: grid;
+    grid-template-columns: 250px minmax(auto, 600px) 250px;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Left Sidebar */
+.user-profile-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 3px solid #4e54c8;
+}
+
+.user-profile-card h3 {
+    color: #333;
+    margin: 10px 0;
+}
+
+.bio {
+    color: #666;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+/* Main Feed */
+.main-feed {
+    background: transparent;
+}
+
+/* Create Post Section */
+.create-post {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.post-form-header h2 {
+    color: #333;
+    margin: 0;
+}
+
+.post-user-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-type-selector select,
+.post-form textarea,
+.image-upload input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.post-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.post-button {
+    background: #4e54c8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    align-self: flex-end;
+    transition: background-color 0.3s;
+}
+
+.post-button:hover {
+    background: #3b42a1;
+}
+
+/* Post Card */
+.post-card {
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.post-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.post-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.post-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.post-time {
+    color: #666;
+    font-size: 12px;
+}
+
+.post-type-badge {
+    background: #4e54c8;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+
+.post-content {
+    padding: 15px;
+    color: #333;
+}
+
+.post-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+/* Updated Like Section Styles */
+.post-actions {
+    padding: 12px 15px;
+    border-top: 1px solid #eee;
+}
+
+.like-form {
+    display: inline-block;
+}
+
+.like-button {
     background: none;
     border: none;
     cursor: pointer;
+    padding: 5px 10px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
+}
+
+.like-heart {
+    color: #ff4444;
+    font-size: 18px;
+}
+
+.like-number {
+    font-size: 14px;
     color: #666;
 }
 
@@ -337,6 +831,11 @@ header nav ul li a:hover {
     cursor: pointer;
     margin-top: 10px;
     margin-left: 42px;
+    transition: background-color 0.3s;
+}
+
+.comment-submit:hover {
+    background: #3b42a1;
 }
 
 /* Right Sidebar */
@@ -376,67 +875,6 @@ header nav ul li a:hover {
 .suggestion-info,
 .friend-info {
     flex: 1;
-}
-
-.follow-button {
-    background: #4e54c8;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.message-friend {
-    background-color: #f1f1f1;
-    color: black;
-    font-weight: normal;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 80%;
-
-}
-
-/* Footer */
-footer {
-    margin-top: auto;
-    padding: 20px;
-    text-align: center;
-    background: linear-gradient(135deg, #07076e, #6e96e5);
-    color: #fff;
-
-
-
-}
-
-.footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-.footer-links a {
-    color: white;
-    text-decoration: none;
-}
-
-
-.suggested-user {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-    color: black;
-}
-
-.suggested-user:last-child {
-    border-bottom: none;
-}
-
-.suggestion-info {
-    flex: 1;
     margin-left: 10px;
 }
 
@@ -467,6 +905,15 @@ footer {
     background: #3b42a1;
 }
 
+.message-friend {
+    background-color: #f1f1f1;
+    color: black;
+    font-weight: normal;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
 .no-suggestions {
     text-align: center;
     padding: 15px;
@@ -474,54 +921,32 @@ footer {
     font-style: italic;
 }
 
-
-/*LIKING */
-
- .post-actions {
-    padding: 12px 15px;
-    border-top: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
 }
 
-.like-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border: none;
+.like-btn {
     background: none;
+    border: none;
     cursor: pointer;
-    border-radius: 20px;
-    transition: all 0.2s ease;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 
-.like-button:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+.heart {
+    font-size: 20px;
 }
 
-.like-icon {
-    font-size: 18px;
-    transition: transform 0.3s ease;
-}
-
-.like-count {
+.count {
     font-size: 14px;
     color: #666;
-    font-weight: 500;
 }
 
-.like-button.liked .like-icon {
-    animation: likePopup 0.3s ease forwards;
-}
 
-.like-button.liked .like-count {
-    color: #e41e3f;
-}
-
-@keyframes likePopup {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
-}

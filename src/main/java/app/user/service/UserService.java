@@ -1,6 +1,8 @@
 package app.user.service;
 
 import app.exceprion.DomainException;
+import app.follow.repository.FollowRepository;
+import app.notification.service.NotificationService;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repoistory.UserRepository;
@@ -8,29 +10,33 @@ import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
 import app.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private  final PasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
+
 
 
 @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
+    this.followRepository = followRepository;
+
+}
 
     public User register(RegisterRequest registerRequest){
 
@@ -127,4 +133,16 @@ public class UserService {
             userRepository.save(user);
         });
     }
+
+    public void updateOnlineStatus(UUID userId, boolean isOnline) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DomainException("User not found"));
+
+        user.setOnline(isOnline);
+        userRepository.save(user);
+
+
+
+    }
+
 }

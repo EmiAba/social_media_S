@@ -3,6 +3,7 @@ package app.follow.service;
 import app.exceprion.DomainException;
 import app.follow.model.Follow;
 import app.follow.repository.FollowRepository;
+import app.notification.service.NotificationService;
 import app.user.model.User;
 import app.user.repoistory.UserRepository;
 import app.user.service.UserService;
@@ -18,12 +19,16 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
+
 
     @Autowired
-    public FollowService(FollowRepository followRepository, UserService userService, UserRepository userRepository) {
+    public FollowService(FollowRepository followRepository, UserService userService, UserRepository userRepository, NotificationService notificationService) {
         this.followRepository = followRepository;
         this.userService = userService;
         this.userRepository = userRepository;
+
+        this.notificationService = notificationService;
     }
 
     public List<User> getSuggestedUsers(UUID userId) {
@@ -39,7 +44,7 @@ public class FollowService {
         List<Follow> follows = followRepository.findByFollowerId(userId);
         return follows.stream()
                 .map(Follow::getFollowed)
-                .peek(user -> user.setOnline(userRepository.findById(user.getId()).get().isOnline()))  // ✅ Fetch real-time status
+                .peek(user -> user.setOnline(userRepository.findById(user.getId()).get().isOnline()))
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +55,6 @@ public class FollowService {
         User followed = userService.getUserById(followedId)
                 .orElseThrow(() -> new DomainException("Followed user not found"));
 
-
         if (followRepository.findByFollowerAndFollowed(follower, followed).isPresent()) {
             throw new DomainException("Already following this user");
         }
@@ -59,7 +63,12 @@ public class FollowService {
         follow.setFollower(follower);
         follow.setFollowed(followed);
         followRepository.save(follow);
+
+        // send Notification for Follow
+        notificationService.createFollowNotification(followed, follower.getUsername());
+
     }
+
 
     public void unfollowUser(UUID followerId, UUID followedId) {
         User follower = userService.getUserById(followerId)
