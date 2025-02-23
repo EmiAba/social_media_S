@@ -17,7 +17,6 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-
     public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;
     }
@@ -39,38 +38,25 @@ public class NotificationController {
     }
 
     @PostMapping("/{id}/read")
-    @ResponseBody
-    public int markAsRead(@PathVariable UUID id, HttpSession session) {
+    public String markAsRead(@PathVariable UUID id, HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) {
-            return 0;
+            return "redirect:/login";
         }
 
         notificationService.markAsRead(id);
-        return notificationService.getUnreadCount(user);
+        return "redirect:/notifications";
     }
 
     @PostMapping("/read-all")
-    @ResponseBody
-    public int markAllAsRead(HttpSession session) {
+    public String markAllAsRead(HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) {
-            return 0;
+            return "redirect:/login";
         }
 
         notificationService.markAllAsRead(user);
-        return 0;
-    }
-
-    @GetMapping("/unread-count")
-    @ResponseBody
-    public int getUnreadCount(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
-        if (user == null) {
-            return 0;
-        }
-
-        return notificationService.getUnreadCount(user);
+        return "redirect:/notifications";
     }
 
     @DeleteMapping("/{id}")
@@ -81,5 +67,4 @@ public class NotificationController {
         }
         return "redirect:/notifications";
     }
-
 }

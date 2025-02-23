@@ -1,18 +1,18 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Manage Posts</title>
+    <title>Manage Comments</title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
 <header>
-    <h1>Manage Posts</h1>
+    <h1>Manage Comments</h1>
     <nav>
         <ul>
             <li><a href="/admin">Dashboard</a></li>
             <li><a href="/admin/users">Manage Users</a></li>
-            <li><a href="/admin/comments">Manage Comments</a></li>
+            <li><a href="/admin/posts">Manage Posts</a></li>
+
         </ul>
     </nav>
 </header>
@@ -20,17 +20,19 @@
 <main>
     <table>
         <tr>
-            <th>Content</th>
+            <th>Comment</th>
             <th>Author</th>
+            <th>Post</th>
             <th>Created At</th>
             <th>Actions</th>
         </tr>
-        <tr th:each="post : ${posts}">
-            <td th:text="${post.content}"></td>
-            <td th:text="${post.user.username}"></td>
-            <td th:text="${post.createdAt}"></td>
+        <tr th:each="comment : ${comments}">
+            <td th:text="${comment.content}"></td>
+            <td th:text="${comment.user.username}"></td>
+            <td th:text="${comment.post.content}"></td> <!-- Optional -->
+            <td th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy HH:mm')}"></td>
             <td>
-                <form th:action="@{/admin/posts/delete/{id}(id=${post.id})}" th:method="post">
+                <form th:action="@{/admin/comments/delete/{id}(id=${comment.id})}" method="post">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit">Delete</button>
                 </form>
@@ -38,6 +40,7 @@
         </tr>
     </table>
 </main>
+
 <footer>
     <p>&copy; 2025 Social Media App. Admin Panel.</p>
 </footer>

@@ -3,27 +3,23 @@ package app.web;
 import app.like.service.LikeActService;
 import app.user.model.User;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/likes")
 public class LikeActController {
     private final LikeActService likeActService;
 
-    @Autowired
     public LikeActController(LikeActService likeActService) {
         this.likeActService = likeActService;
     }
 
     @PostMapping("/{postId}/toggle")
-    @ResponseBody
     public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable UUID postId, HttpSession session) {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null) {

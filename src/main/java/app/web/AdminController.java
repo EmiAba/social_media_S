@@ -1,5 +1,7 @@
 package app.web;
 
+import app.comment.model.Comment;
+import app.comment.repository.CommentRepository;
 import app.post.Repository.PostRepository;
 import app.user.repoistory.UserRepository;
 import app.user.model.User;
@@ -17,10 +19,12 @@ import java.util.UUID;
 public class AdminController {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private CommentRepository commentRepository;
 
-    public AdminController(UserRepository userRepository, PostRepository postRepository) {
+    public AdminController(UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
 
 
@@ -98,4 +102,31 @@ public class AdminController {
         postRepository.deleteById(id);
         return new ModelAndView("redirect:/admin/posts");
     }
+
+
+    @GetMapping("/comments")
+    public ModelAndView manageComments(HttpSession session) {
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        if (loggedUser == null || loggedUser.getRole() != UserRole.ADMIN) {
+            return new ModelAndView("redirect:/home");
+        }
+
+        List<Comment> comments = commentRepository.findAll();
+
+
+        System.out.println("Comments Retrieved: " + comments.size());
+
+        ModelAndView modelAndView = new ModelAndView("admin-comments");
+        modelAndView.addObject("comments", comments);
+
+        return modelAndView;
+    }
+
+
+    @DeleteMapping("/comments/delete/{id}")
+    public ModelAndView deleteComment(@PathVariable UUID id) {
+        commentRepository.deleteById(id);
+        return new ModelAndView("redirect:/admin/comments");
+    }
 }
+

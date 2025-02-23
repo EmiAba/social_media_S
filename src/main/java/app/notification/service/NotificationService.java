@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Service
 public class NotificationService {
-
     private final NotificationRepository notificationRepository;
 
     public NotificationService(NotificationRepository notificationRepository) {
@@ -30,31 +29,28 @@ public class NotificationService {
     }
 
     public void createMessageNotification(User recipient, String senderUsername) {
-        createNotification(recipient, NotificationType.MESSAGE, senderUsername);
+        createNotification(recipient, NotificationType.MESSAGE, senderUsername + " sent you a new message");
     }
 
     public void createLikeNotification(User recipient, String likerUsername) {
-        createNotification(recipient, NotificationType.LIKE, likerUsername);
+        createNotification(recipient, NotificationType.LIKE, likerUsername + " liked your post");
     }
 
     public void createFollowNotification(User recipient, String followerUsername) {
-        createNotification(recipient, NotificationType.FOLLOW, followerUsername);
+        createNotification(recipient, NotificationType.FOLLOW, followerUsername + " started following you");
     }
 
     public void createOnlineStatusNotification(User recipient, String username, boolean isOnline) {
         NotificationType type = isOnline ? NotificationType.USER_ONLINE : NotificationType.USER_OFFLINE;
-        createNotification(recipient, type, username);
+        String status = isOnline ? " is now online" : " went offline";
+        createNotification(recipient, type, username + status);
     }
 
-    public void createCommentNotification(User recipient, String commenterUsername) {
-        createNotification(recipient, NotificationType.COMMENT, commenterUsername);
-    }
-
-    private void createNotification(User user, NotificationType type, String username) {
+    private void createNotification(User user, NotificationType type, String message) {
         Notification notification = Notification.builder()
                 .user(user)
                 .type(type)
-                .message(type.formatMessage(username))
+                .message(message)
                 .isRead(false)
                 .build();
         notificationRepository.save(notification);
@@ -73,5 +69,4 @@ public class NotificationService {
     public void deleteNotification(UUID notificationId) {
         notificationRepository.deleteById(notificationId);
     }
-
 }

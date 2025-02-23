@@ -230,8 +230,11 @@
                 const heart = btn.querySelector('.heart');
                 const count = btn.querySelector('.count');
 
+                // Extract the post ID from the form action URL
+                const postId = btn.closest('.like-form').getAttribute('action').match(/\/likes\/([^/]+)\/toggle/)[1];
+
                 try {
-                    const response = await fetch(this.action, {
+                    const response = await fetch(`/likes/${postId}/toggle`, {
                         method: 'POST',
                         credentials: 'include'
                     });

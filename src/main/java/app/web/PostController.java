@@ -1,6 +1,8 @@
 package app.web;
 
+import app.exceprion.DomainException;
 import app.follow.service.FollowService;
+import app.like.service.LikeActService;
 import app.post.model.Post;
 import app.post.service.PostService;
 import app.comment.service.CommentService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -24,12 +27,14 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final FollowService followService;
+    private final LikeActService likeActService;
 
     @Autowired
-    public PostController(PostService postService, CommentService commentService, FollowService followService) {
+    public PostController(PostService postService, CommentService commentService, FollowService followService, LikeActService likeActService) {
         this.postService = postService;
         this.commentService = commentService;
         this.followService = followService;
+        this.likeActService = likeActService;
     }
 
 
@@ -88,4 +93,6 @@ public class PostController {
     public String redirectToHome() {
         return "redirect:/posts/home";
     }
+
+
 }
