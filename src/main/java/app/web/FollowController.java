@@ -30,4 +30,16 @@ public class FollowController {
         followService.followUser(loggedInUser.getId(), userId);
         return ResponseEntity.ok("User followed successfully");
     }
+
+
+    @PostMapping("/unfollow/{userId}")
+    public ResponseEntity<String> unfollowUser(@PathVariable UUID userId, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedUser");
+        if (loggedInUser == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        followService.unfollowUser(loggedInUser.getId(), userId);
+        return ResponseEntity.ok("User unfollowed successfully");
+    }
 }

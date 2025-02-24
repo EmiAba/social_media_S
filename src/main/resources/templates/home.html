@@ -207,9 +207,15 @@
                         </div>
                         <a th:href="@{/inbox/{friendId}(friendId=${friend.id})}"
                            class="message-friend">💬</a>
+
+                        <!-- Unfollow Button -->
+                        <form th:action="@{/follow/unfollow/{friendId}(friendId=${friend.id})}" method="post">
+                            <button type="submit" class="unfollow-btn">❌ Unfollow</button>
+                        </form>
                     </div>
                 </div>
             </section>
+
         </aside>
     </div>
 </main>

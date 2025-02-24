@@ -244,7 +244,7 @@ header nav ul li a:hover {
     object-fit: cover;
 }
 
-/* Likes Section - Consolidated */
+/* Likes Section*/
 .post-actions {
     padding: 12px 15px;
     border-top: 1px solid #eee;
@@ -306,7 +306,7 @@ header nav ul li a:hover {
     100% { transform: scale(1); }
 }
 
-/* Read-only like button for non-logged users */
+
 .like-btn-readonly {
     display: inline-flex;
     align-items: center;
@@ -491,6 +491,498 @@ header nav ul li a:hover {
     padding: 10px;
     border-radius: 10px;
     max-width: 80%;
+}/* Base Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 15px;
+    margin: 20px auto;
+    border-radius: 10px;
+    max-width: 600px;
+    text-align: center;
+    background: white;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+/* Header Styles */
+.header-content {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
+    text-align: center;
+}
+
+.user-welcome {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+header nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Container Layout */
+.main-container {
+    display: grid;
+    grid-template-columns: 250px minmax(auto, 600px) 400px;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Left Sidebar */
+.user-profile-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 3px solid #4e54c8;
+}
+
+.user-profile-card h3 {
+    color: #333;
+    margin: 10px 0;
+}
+
+.bio {
+    color: #666;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+/* Main Feed */
+.main-feed {
+    background: transparent;
+}
+
+/* Create Post Section */
+.create-post {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.post-form-header h2 {
+    color: #333;
+    margin: 0;
+}
+
+.post-user-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-type-selector select,
+.post-form textarea,
+.image-upload input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.post-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.post-button {
+    background: #4e54c8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    align-self: flex-end;
+    transition: background-color 0.3s;
+}
+
+.post-button:hover {
+    background: #3b42a1;
+}
+
+/* Post Card */
+.post-card {
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.post-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.post-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.post-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.post-time {
+    color: #666;
+    font-size: 12px;
+}
+
+.post-type-badge {
+    background: #4e54c8;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+
+.post-content {
+    padding: 15px;
+    color: #333;
+}
+
+.post-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+/* Likes Section */
+.post-actions {
+    padding: 12px 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.like-form {
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.like-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.like-btn:not(.already-liked):hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.like-btn.already-liked {
+    cursor: default;
+    opacity: 1;
+}
+
+.like-btn.already-liked .heart {
+    color: red;
+    animation: pulse 0.5s;
+}
+
+.heart {
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.count {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.like-text {
+    font-size: 14px;
+    color: #666;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.like-btn-readonly {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: default;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 20px;
+}
+
+.like-btn-readonly .heart {
+    color: #ccc;
+}
+
+.like-display {
+    margin: 10px 0;
+}
+
+/* Comments Section */
+.comments-section {
+    background: #f8f9fa;
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.comment {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.comment-profile-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.comment-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-username {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.comment-time {
+    color: #666;
+    font-size: 12px;
+}
+
+.comment-content {
+    color: #333;
+    margin-left: 42px;
+}
+
+.comment-form {
+    margin-top: 15px;
+}
+
+.comment-form-content {
+    display: flex;
+    gap: 10px;
+}
+
+.comment-user-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.comment-form textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.comment-submit {
+    background: #4e54c8;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 42px;
+    transition: background-color 0.3s;
+}
+
+.comment-submit:hover {
+    background: #3b42a1;
+}
+
+/* Right Sidebar */
+.right-sidebar section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.right-sidebar h3 {
+    color: #333;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.suggested-user,
+.friend-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    color: black;
+}
+
+.suggestion-profile-pic,
+.friend-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #4e54c8;
+}
+
+.suggestion-info,
+.friend-info {
+    flex: 1;
+    margin-left: 15px;
+}
+
+.suggestion-username {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.follow-form {
+    margin-top: 5px;
+}
+
+.follow-button {
+    background: #4e54c8;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.follow-button:hover {
+    background: #3b42a1;
+}
+
+.message-friend {
+    background-color: #f1f1f1;
+    color: black;
+    font-weight: normal;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
 }
 
 .no-suggestions {
@@ -518,5 +1010,73 @@ footer {
     text-align: center;
     background: linear-gradient(135deg, #07076e, #6e96e5);
     color: #fff;
+}
+
+.unfollow-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: red;
+    padding: 2px 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.unfollow-btn:hover {
+    color: darkred;
+}
+
+.unfollow-btn img {
+    width: 16px;
+    height: 16px;
+}
+
+.no-suggestions {
+    text-align: center;
+    padding: 15px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Notification Badges */
+.notification-badge,
+.message-badge {
+    background-color: #ff4444;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #07076e, #6e96e5);
+    color: #fff;
+}
+.unfollow-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: red;
+    padding: 2px 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.unfollow-btn:hover {
+    color: darkred;
+}
+
+.unfollow-btn img {
+    width: 16px;
+    height: 16px;
 }
 
