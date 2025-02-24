@@ -260,7 +260,7 @@
                             likeText.textContent = data.liked ? 'Liked' : 'Like';
                         }
 
-                        // Update the button class
+
                         if (data.liked) {
                             likeBtn.classList.add('already-liked');
                         } else {
@@ -286,7 +286,7 @@
 
                     const postId = likeForm.action.match(/\/likes\/([^/]+)\/toggle/)[1];
 
-                    // Fetch current like status for this post
+
                     const response = await fetch(`/likes/${postId}/status`, {
                         method: 'GET',
                         credentials: 'include'
