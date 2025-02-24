@@ -32,7 +32,6 @@ public class PostService {
         this.likeActService = likeActService;
     }
 
-
     public PostResponse createPost(PostRequest request, User user) {
         Post post = Post.builder()
                 .user(user)
@@ -46,24 +45,23 @@ public class PostService {
                 .build();
 
         Post savedPost = postRepository.save(post);
-        return convertToResponse(savedPost);
+        return convertToResponse(savedPost, user);
     }
 
-
-    public List<PostResponse> getAllPosts(User user) {
+    public List<PostResponse> getAllPosts(User currentUser) {
         return postRepository.findAll()
                 .stream()
                 .sorted((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt()))
-                .map(this::convertToResponse)
+                .map(post -> convertToResponse(post, currentUser))
                 .collect(Collectors.toList());
     }
 
-
-    public PostResponse convertToResponse(Post post) {
+    public PostResponse convertToResponse(Post post, User currentUser) {
         if (post == null) {
             return null;
         }
 
+        // Convert comments
         List<CommentResponse> commentResponses = (post.getComments() != null)
                 ? post.getComments().stream()
                 .map(comment -> CommentResponse.builder()
@@ -76,6 +74,15 @@ public class PostService {
                 .collect(Collectors.toList())
                 : new ArrayList<>();
 
+        // Get the current like count directly from database
+        long likeCount = likeActService.countLikes(post.getId());
+
+        // Check if current user has liked this post
+        boolean isLikedByUser = false;
+        if (currentUser != null) {
+            isLikedByUser = likeActService.hasUserLikedPost(post.getId(), currentUser);
+        }
+
         return PostResponse.builder()
                 .id(post.getId())
                 .userId(post.getUser().getId())
@@ -86,7 +93,14 @@ public class PostService {
                 .createdAt(post.getCreatedAt())
                 .comments(commentResponses)
                 .profilePicture(post.getUser().getProfilePicture())
+                .likeCount(likeCount)          // Add current like count
+                .isLikedByUser(isLikedByUser)  // Add user's like status
                 .build();
+    }
+
+
+    public PostResponse convertToResponse(Post post) {
+        return convertToResponse(post, null);
     }
 
     public Post getPostEntityById(UUID id) {

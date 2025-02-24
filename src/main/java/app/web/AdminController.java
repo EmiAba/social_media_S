@@ -38,12 +38,13 @@ public class AdminController {
         long userCount = userRepository.count();
         long postCount = postRepository.count();
         long onlineUsers = userRepository.countOnlineUsers();
+        long commentCount=commentRepository.count();
         long messageCount = 0;
 
         ModelAndView modelAndView = new ModelAndView("admin-dashboard");
         modelAndView.addObject("userCount", userCount);
         modelAndView.addObject("postCount", postCount);
-        modelAndView.addObject("messageCount", messageCount);
+        modelAndView.addObject("commentCount", commentCount);
         modelAndView.addObject("onlineUsers", onlineUsers);
 
         return modelAndView;

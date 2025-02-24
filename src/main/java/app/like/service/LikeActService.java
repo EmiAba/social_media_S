@@ -34,43 +34,41 @@ public class LikeActService {
         Optional<LikeAct> existingLike = likeActRepository.findByUserAndPost(user, post);
 
         if (existingLike.isPresent()) {
+
             likeActRepository.delete(existingLike.get());
             return false;
         } else {
+
             LikeAct likeAct = LikeAct.builder()
                     .user(user)
                     .post(post)
                     .build();
             likeActRepository.save(likeAct);
 
+
             if (!post.getUser().getId().equals(user.getId())) {
                 notificationService.createLikeNotification(
-                        post.getUser(),      // recipient
-                        user.getUsername()   // liker username
+                        post.getUser(),
+                        user.getUsername()
                 );
             }
             return true;
         }
     }
-
-    public long countLikes(UUID postId) {
-        return postRepository.findById(postId)
-                .map(likeActRepository::countByPost)
-                .orElse(0L);
-    }
-
     public boolean hasUserLikedPost(UUID postId, User user) {
+        if (user == null) {
+            return false;
+        }
+
         return postRepository.findById(postId)
                 .map(post -> likeActRepository.findByUserAndPost(user, post).isPresent())
                 .orElse(false);
     }
 
-    public Map<UUID, Long> getLikeCountsForPosts(List<UUID> postIds) {
-        List<Post> posts = postRepository.findAllById(postIds);
-        Map<UUID, Long> likeCounts = new HashMap<>();
-        for (Post post : posts) {
-            likeCounts.put(post.getId(), likeActRepository.countByPost(post));
-        }
-        return likeCounts;
+
+    public long countLikes(UUID postId) {
+        return postRepository.findById(postId)
+                .map(likeActRepository::countByPost)
+                .orElse(0L);
     }
 }
