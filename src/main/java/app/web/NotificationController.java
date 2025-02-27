@@ -5,7 +5,6 @@ import app.notification.service.NotificationService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

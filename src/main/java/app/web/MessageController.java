@@ -5,6 +5,7 @@ import app.message.model.Message;
 import app.message.service.MessageService;
 import app.notification.service.NotificationService;
 import app.security.AuthenticationDetails;
+import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.web.dto.MessageRequest;
 import app.user.model.User;
@@ -49,7 +50,8 @@ public class MessageController {
         List<Message> messages = messageService.getReceivedMessagesAndMarkAsRead(user.getId());
         ModelAndView modelAndView = new ModelAndView("inbox");
         modelAndView.addObject("messages", messages);
-        modelAndView.addObject("user", user);  // Add the entire user object to match home.html
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("isAdmin", user.getRole() == UserRole.ADMIN);
 
         return modelAndView;
     }
@@ -62,7 +64,8 @@ public class MessageController {
         }
         ModelAndView modelAndView = new ModelAndView("send_message");
         modelAndView.addObject("messageRequest", new MessageRequest());
-        modelAndView.addObject("user", user);  // Add the entire user object to match home.html
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("isAdmin", user.getRole() == UserRole.ADMIN);
 
         return modelAndView;
     }
@@ -86,7 +89,9 @@ public class MessageController {
         ModelAndView modelAndView = new ModelAndView("send_message");
         modelAndView.addObject("messageRequest", messageRequest);
         modelAndView.addObject("recipient", recipient);
-        modelAndView.addObject("user", currentUser);  // Add the entire user object to match home.html
+        modelAndView.addObject("user", currentUser);
+
+
 
         return modelAndView;
     }

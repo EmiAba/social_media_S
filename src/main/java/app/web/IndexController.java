@@ -6,6 +6,7 @@ import app.notification.service.NotificationService;
 import app.post.service.PostService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
+import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
 import app.web.dto.PostResponse;
@@ -100,6 +101,7 @@ public class IndexController {
 
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("isAdmin", user.getRole() == UserRole.ADMIN);
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("unreadMessageCount", unreadMessageCount);
         modelAndView.addObject("suggestedUsers", suggestedUsers);

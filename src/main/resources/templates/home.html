@@ -20,14 +20,11 @@
                 <li><a href="/home" class="active">Home</a></li>
                 <li><a href="/profile">Profile</a></li>
                 <li>
-                    <a th:href="@{/notifications}" class="notification-link">
+                    <a th:href="@{/notifications}">
                         Notifications
-                        <span th:if="${unreadNotificationCount > 0}"
-                              class="notification-badge"
-                              th:text="${unreadNotificationCount}">
-                        </span>
+                        <span th:if="${unreadNotificationCount > 0}" class="notification-badge" th:text="${unreadNotificationCount}">
+                            </span>
                     </a>
-                </li>
                 <li>
                     <a href="/inbox">
                         Inbox
@@ -35,17 +32,23 @@
                               th:text="${unreadMessageCount}"></span>
                     </a>
                 </li>
-                <li sec:authorize="hasRole('ADMIN')">
+                <li th:if="${isAdmin}">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
+
+
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
+
 </header>
+
 
 <!-- Main Content -->
 <main>
+
+
     <div class="main-container">
         <!-- Left Sidebar -->
         <aside class="left-sidebar">

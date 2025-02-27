@@ -4,7 +4,7 @@
     <title>Manage Comments</title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
-<body>
+<body sec:authorize="hasRole('ADMIN')">
 <!-- User Header -->
 <header>
     <div class="header-content">
@@ -18,22 +18,11 @@
                 <li><a href="/home">Home</a></li>
                 <li><a href="/admin/users">Manage Users</a></li>
                 <li><a href="/admin/posts">Manage Posts</a></li>
-                <li><a href="/admin/comments">Manage Comments</a></li>
+                <li><a href="/admin/comments" class="active">Manage Comments</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
-</header>
-
-<header>
-    <h1>Manage Comments</h1>
-    <nav>
-        <ul>
-            <li><a href="/admin">Dashboard</a></li>
-            <li><a href="/admin/users">Manage Users</a></li>
-            <li><a href="/admin/posts">Manage Posts</a></li>
-        </ul>
-    </nav>
 </header>
 
 <main>
@@ -63,5 +52,7 @@
 <footer>
     <p>&copy; 2025 Social Media App. Admin Panel.</p>
 </footer>
+
+
 </body>
 </html>

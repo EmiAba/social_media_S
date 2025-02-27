@@ -8,6 +8,7 @@ import app.user.repoistory.UserRepository;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Controller
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/admin")
 public class AdminController {
     private final UserRepository userRepository;

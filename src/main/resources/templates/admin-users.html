@@ -4,7 +4,7 @@
     <title>Manage Users</title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
-<body>
+<body sec:authorize="hasRole('ADMIN')">
 <!-- User Header -->
 <header>
     <div class="header-content">
@@ -16,7 +16,7 @@
         <nav>
             <ul>
                 <li><a href="/home">Home</a></li>
-                <li><a href="/admin/users">Manage Users</a></li>
+                <li><a href="/admin/users" class="active">Manage Users</a></li>
                 <li><a href="/admin/posts">Manage Posts</a></li>
                 <li><a href="/admin/comments">Manage Comments</a></li>
                 <li><a href="/logout">Logout</a></li>
@@ -24,8 +24,6 @@
         </nav>
     </div>
 </header>
-
-
 
 <main>
     <table>
@@ -60,5 +58,6 @@
 <footer>
     <p>&copy; 2025 Social Media App. Admin Panel.</p>
 </footer>
+
 </body>
 </html>

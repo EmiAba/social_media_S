@@ -2,6 +2,7 @@ package app.web;
 
 import app.security.AuthenticationDetails;
 import app.user.model.User;
+import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.web.dto.UserEditRequest;
 import jakarta.servlet.http.HttpSession;
@@ -40,6 +41,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("profile");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("isAdmin", user.getRole() == UserRole.ADMIN);
 
         return modelAndView;
     }
@@ -57,6 +59,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView("edit_profile");
         modelAndView.addObject("userEditRequest", new UserEditRequest());
         modelAndView.addObject("user", user);
+        modelAndView.addObject("isAdmin", user.getRole() == UserRole.ADMIN);
 
         return modelAndView;
     }

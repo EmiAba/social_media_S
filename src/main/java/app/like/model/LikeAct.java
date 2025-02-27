@@ -28,4 +28,5 @@ public class LikeAct {
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
 }
