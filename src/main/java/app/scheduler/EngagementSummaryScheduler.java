@@ -25,7 +25,7 @@ public class EngagementSummaryScheduler {
     public void sendWeeklySummaryToInbox() {
         System.out.println("Scheduler is called");
 
-        User systemAdmin = userRepository.findUserByRole(UserRole.ADMIN); // Use enum instead of "ADMIN"
+        User systemAdmin = userRepository.findUserByRole(UserRole.ADMIN);
 
         if (systemAdmin == null) {
             System.out.println("No system admin found. Skipping engagement summary.");
