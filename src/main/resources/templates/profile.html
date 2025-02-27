@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,29 +11,25 @@
 <!-- Header -->
 <header>
     <div class="header-content">
+        <!-- For the header section -->
         <div class="user-welcome">
-            <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+            <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
                  alt="Your Profile" class="header-profile-pic">
-            <h1>Welcome, <span th:text="${session.loggedUser.username}"></span></h1>
+            <h1>Welcome, <span th:text="${user.username}"></span></h1>
         </div>
         <nav>
             <ul>
-                <li><a href="/home" class="active">Home</a></li>
-                <li><a href="/profile">Profile</a></li>
-
+                <li><a href="/home">Home</a></li>
+                <li><a href="/profile" class="active">Profile</a></li>
                 <li><a th:href="@{/notifications}">Notifications</a></li>
-
                 <li>
                     <a href="/inbox">
                         Inbox
-
                     </a>
                 </li>
-
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                <li sec:authorize="hasRole('ADMIN')">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
-
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -52,7 +48,7 @@
             <p><strong>First Name:</strong> <span th:text="${user.firstName}"></span></p>
             <p><strong>Last Name:</strong> <span th:text="${user.lastName}"></span></p>
             <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
-            <p><strong>Bio:</strong> <span th:text="${user.bio}"></span></p>
+            <p><strong>Bio:</strong> <span th:text="${user.bio ?: 'No bio added yet'}"></span></p>
             <p><strong>Created At:</strong> <span th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy HH:mm')}"></span></p>
             <p><strong>Last Updated At:</strong> <span th:text="${#temporals.format(user.updatedAt, 'dd MMM yyyy HH:mm')}"></span></p>
 

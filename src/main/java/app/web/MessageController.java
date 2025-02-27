@@ -49,7 +49,7 @@ public class MessageController {
         List<Message> messages = messageService.getReceivedMessagesAndMarkAsRead(user.getId());
         ModelAndView modelAndView = new ModelAndView("inbox");
         modelAndView.addObject("messages", messages);
-        modelAndView.addObject("username", authenticationDetails.getUsername());
+        modelAndView.addObject("user", user);  // Add the entire user object to match home.html
 
         return modelAndView;
     }
@@ -62,14 +62,14 @@ public class MessageController {
         }
         ModelAndView modelAndView = new ModelAndView("send_message");
         modelAndView.addObject("messageRequest", new MessageRequest());
-        modelAndView.addObject("username", authenticationDetails.getUsername());
+        modelAndView.addObject("user", user);  // Add the entire user object to match home.html
 
         return modelAndView;
     }
 
     @GetMapping("/inbox/{userId}")
     public ModelAndView showDirectMessage(@PathVariable UUID userId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User currentUser=userService.getById(authenticationDetails.getUserId());
+        User currentUser = userService.getById(authenticationDetails.getUserId());
         if (currentUser == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -86,6 +86,8 @@ public class MessageController {
         ModelAndView modelAndView = new ModelAndView("send_message");
         modelAndView.addObject("messageRequest", messageRequest);
         modelAndView.addObject("recipient", recipient);
+        modelAndView.addObject("user", currentUser);  // Add the entire user object to match home.html
+
         return modelAndView;
     }
 
@@ -96,10 +98,15 @@ public class MessageController {
             @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
 
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("send_message");
+            ModelAndView modelAndView = new ModelAndView("send_message");
+            User user = userService.getById(authenticationDetails.getUserId());
+            if (user != null) {
+                modelAndView.addObject("user", user);
+            }
+            return modelAndView;
         }
 
-        User sender=userService.getById(authenticationDetails.getUserId());
+        User sender = userService.getById(authenticationDetails.getUserId());
         if (sender == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -110,7 +117,6 @@ public class MessageController {
 
             messageService.saveMessage(messageRequest.getUsername(), messageRequest.getContent(), sender);
 
-
             System.out.println("Creating notification for message from " + sender.getUsername() + " to " + recipient.getUsername());
             notificationService.createMessageNotification(recipient, sender.getUsername());
         }
@@ -119,8 +125,8 @@ public class MessageController {
     }
 
     @DeleteMapping("/inbox/delete/{messageId}")
-    public ModelAndView deleteMessage(@PathVariable UUID messageId, @RequestParam String content,@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user=userService.getById(authenticationDetails.getUserId());
+    public ModelAndView deleteMessage(@PathVariable UUID messageId, @RequestParam String content, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -129,5 +135,4 @@ public class MessageController {
 
         return new ModelAndView("redirect:/inbox");
     }
-
 }
