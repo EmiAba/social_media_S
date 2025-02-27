@@ -1,11 +1,13 @@
 package app.web;
 
+import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.UserEditRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +28,9 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ModelAndView getProfilePage(HttpSession session) {
+    public ModelAndView getProfilePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
 
-        User user = (User) session.getAttribute("loggedUser");
+        User user=userService.getById(authenticationDetails.getUserId());
 
 
         if (user == null) {
@@ -44,8 +46,8 @@ public class UserController {
 
 
     @GetMapping("/edit-profile")
-    public ModelAndView getEditProfilePage(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public ModelAndView getEditProfilePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user=userService.getById(authenticationDetails.getUserId());
 
         if (user == null) {
             return new ModelAndView("redirect:/login");
@@ -60,7 +62,7 @@ public class UserController {
     }
 
 
-
+//Ne e opraveno
     @PutMapping("/{id}/profile")
     public ModelAndView updateUserProfile(@PathVariable UUID id,
                                           @Valid UserEditRequest userEditRequest,

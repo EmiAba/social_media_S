@@ -4,11 +4,13 @@ import app.follow.service.FollowService;
 import app.message.model.Message;
 import app.message.service.MessageService;
 import app.notification.service.NotificationService;
+import app.security.AuthenticationDetails;
 import app.user.service.UserService;
 import app.web.dto.MessageRequest;
 import app.user.model.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,33 +41,35 @@ public class MessageController {
     }
 
     @GetMapping("/inbox")
-    public ModelAndView getInbox(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public ModelAndView getInbox(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
         List<Message> messages = messageService.getReceivedMessagesAndMarkAsRead(user.getId());
         ModelAndView modelAndView = new ModelAndView("inbox");
         modelAndView.addObject("messages", messages);
+        modelAndView.addObject("username", authenticationDetails.getUsername());
 
         return modelAndView;
     }
 
     @GetMapping("/send_message")
-    public ModelAndView showSendMessagePage(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public ModelAndView showSendMessagePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
         ModelAndView modelAndView = new ModelAndView("send_message");
         modelAndView.addObject("messageRequest", new MessageRequest());
+        modelAndView.addObject("username", authenticationDetails.getUsername());
 
         return modelAndView;
     }
 
     @GetMapping("/inbox/{userId}")
-    public ModelAndView showDirectMessage(@PathVariable UUID userId, HttpSession session) {
-        User currentUser = (User) session.getAttribute("loggedUser");
+    public ModelAndView showDirectMessage(@PathVariable UUID userId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User currentUser=userService.getById(authenticationDetails.getUserId());
         if (currentUser == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -89,13 +93,13 @@ public class MessageController {
     public ModelAndView sendMessage(
             @ModelAttribute("messageRequest") MessageRequest messageRequest,
             BindingResult bindingResult,
-            HttpSession session) {
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
 
         if (bindingResult.hasErrors()) {
             return new ModelAndView("send_message");
         }
 
-        User sender = (User) session.getAttribute("loggedUser");
+        User sender=userService.getById(authenticationDetails.getUserId());
         if (sender == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -115,8 +119,8 @@ public class MessageController {
     }
 
     @DeleteMapping("/inbox/delete/{messageId}")
-    public ModelAndView deleteMessage(@PathVariable UUID messageId, HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public ModelAndView deleteMessage(@PathVariable UUID messageId, @RequestParam String content,@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user=userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }

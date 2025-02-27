@@ -2,8 +2,11 @@ package app.web;
 
 import app.notification.model.Notification;
 import app.notification.service.NotificationService;
+import app.security.AuthenticationDetails;
 import app.user.model.User;
+import app.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +19,16 @@ import java.util.UUID;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final UserService userService;
 
-    public NotificationController(NotificationService notificationService) {
+    public NotificationController(NotificationService notificationService, UserService userService) {
         this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     @GetMapping
-    public String showNotifications(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public String showNotifications(Model model, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -33,13 +38,14 @@ public class NotificationController {
 
         model.addAttribute("notifications", notifications);
         model.addAttribute("unreadNotificationCount", unreadCount);
+        model.addAttribute("user", user);  // Add the entire user object to match home.html
 
         return "notifications";
     }
 
     @PostMapping("/{id}/read")
-    public String markAsRead(@PathVariable UUID id, HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public String markAsRead(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -49,8 +55,8 @@ public class NotificationController {
     }
 
     @PostMapping("/read-all")
-    public String markAllAsRead(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public String markAllAsRead(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -60,8 +66,8 @@ public class NotificationController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteNotification(@PathVariable UUID id, HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public String deleteNotification(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user != null) {
             notificationService.deleteNotification(id);
         }

@@ -3,6 +3,7 @@ package app.user.service;
 import app.exceprion.DomainException;
 import app.follow.repository.FollowRepository;
 import app.notification.service.NotificationService;
+import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repoistory.UserRepository;
@@ -11,6 +12,9 @@ import app.web.dto.RegisterRequest;
 import app.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +22,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 
 @Slf4j
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private  final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
@@ -141,8 +145,14 @@ public class UserService {
         user.setOnline(isOnline);
         userRepository.save(user);
 
+    }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DomainException("User with this username does not exist."));
+
+        return new AuthenticationDetails(user.getId(), username, user.getPassword(), user.getRole(), user.isOnline());
     }
 
 }
