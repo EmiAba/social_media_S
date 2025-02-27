@@ -13,34 +13,28 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableMethodSecurity
 public class WebMvcConfiguration  implements WebMvcConfigurer {
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests(matchers->matchers
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                         .requestMatchers( "/", "/register").permitAll()
+                .authorizeHttpRequests(matchers -> matchers
+                        .requestMatchers("/js/**", "/css/**", "/images/**").permitAll() // Allow static resources
+                        .requestMatchers("/", "/register").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(form-> form
+                .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/home")
                         .failureUrl("/login?error")
-                        .permitAll())
-
-
-                .logout(logout->logout
+                        .permitAll()
+                )
+                .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        .logoutSuccessUrl("/"))
-        ;
-
-
+                        .logoutSuccessUrl("/")
+                );
 
         return http.build();
-
     }
-
 }

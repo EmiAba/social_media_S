@@ -38,7 +38,7 @@ public class NotificationController {
 
         model.addAttribute("notifications", notifications);
         model.addAttribute("unreadNotificationCount", unreadCount);
-        model.addAttribute("user", user);  // Add the entire user object to match home.html
+        model.addAttribute("user", user);
 
         return "notifications";
     }

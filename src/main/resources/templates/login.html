@@ -16,11 +16,12 @@
     <form  th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" placeholder="Enter your username" required>
-        <p class="alert-warning"   th:if="${#fields.hasErrors('username')}"  th:errors="*{username}"></p>
+
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        <p class="alert-warning"   th:if="${#fields.hasErrors('password')}"  th:errors="*{password}"></p>
+        <p class="alert-warning" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
         <button type="submit">Login</button>
 
         <p>Don't have an account? <a href="/register">Register</a></p>

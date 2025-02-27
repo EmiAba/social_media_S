@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +11,9 @@
 <header>
     <div class="header-content">
         <div class="user-welcome">
-            <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+            <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
                  alt="Your Profile" class="header-profile-pic">
-            <h1>Welcome, <span th:text="${session.loggedUser.username}"></span></h1>
+            <h1>Welcome, <span th:text="${user.username}"></span></h1>
         </div>
         <nav>
             <ul>
@@ -25,7 +25,7 @@
                         <span th:if="${unreadNotificationCount > 0}"
                               class="notification-badge"
                               th:text="${unreadNotificationCount}">
-        </span>
+                        </span>
                     </a>
                 </li>
                 <li>
@@ -35,7 +35,7 @@
                               th:text="${unreadMessageCount}"></span>
                     </a>
                 </li>
-                <li th:if="${session.loggedUser.role.name() == 'ADMIN'}">
+                <li sec:authorize="hasRole('ADMIN')">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
                 <li><a href="/logout">Logout</a></li>
@@ -50,21 +50,19 @@
         <!-- Left Sidebar -->
         <aside class="left-sidebar">
             <div class="user-profile-card">
-                <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
                      alt="Profile Picture">
-                <h3 th:text="${session.loggedUser.username}"></h3>
-                <p class="bio" th:text="${session.loggedUser.bio ?: 'No bio yet'}">Your bio here</p>
+                <h3 th:text="${user.username}"></h3>
+                <p class="bio" th:text="${user.bio ?: 'No bio yet'}">Your bio here</p>
             </div>
         </aside>
 
         <!-- Main Feed -->
         <section class="main-feed">
-
-
             <!-- Create Post Section -->
             <div class="create-post">
                 <div class="post-form-header">
-                    <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                    <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
                          alt="Your Profile" class="post-user-pic">
                     <h2>Create a Post</h2>
                 </div>
@@ -116,15 +114,14 @@
                              onerror="this.style.display='none'">
                     </div>
 
-
                     <!-- Like Section -->
                     <div class="post-actions">
                         <form th:action="@{/likes/{postId}/toggle(postId=${post.id})}" method="POST" class="like-form">
                             <button type="submit" class="like-btn"
                                     th:data-liked="${post.isLikedByUser}"
                                     th:class="${post.isLikedByUser ? 'like-btn already-liked' : 'like-btn'}">
-            <span class="heart" th:style="${post.isLikedByUser ? 'color: red' : 'color: black'}"
-                  th:text="${post.isLikedByUser ? '❤' : '♡'}">♡</span>
+                                <span class="heart" th:style="${post.isLikedByUser ? 'color: red' : 'color: black'}"
+                                      th:text="${post.isLikedByUser ? '❤' : '♡'}">♡</span>
                                 <span class="count" th:text="${post.likeCount}">0</span>
                                 <span class="like-text" th:text="${post.isLikedByUser ? 'Liked' : 'Like'}">Like</span>
                             </button>
@@ -158,7 +155,7 @@
                         <!-- Add Comment Form -->
                         <form th:action="@{/comments/add}" method="POST" class="comment-form">
                             <div class="comment-form-content">
-                                <img th:src="${#strings.isEmpty(session.loggedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : session.loggedUser.profilePicture}"
+                                <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
                                      alt="Your Profile" class="comment-user-pic">
                                 <textarea name="content" placeholder="Write a comment..." required></textarea>
                             </div>
@@ -176,13 +173,13 @@
             <section class="suggested-users">
                 <h3>Suggested Users</h3>
                 <div class="user-suggestions">
-                    <div th:if="${not #lists.isEmpty(suggestedUsers)}" th:each="user : ${suggestedUsers}" class="suggested-user">
-                        <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
+                    <div th:if="${not #lists.isEmpty(suggestedUsers)}" th:each="suggestedUser : ${suggestedUsers}" class="suggested-user">
+                        <img th:src="${#strings.isEmpty(suggestedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : suggestedUser.profilePicture}"
                              alt="User Profile" class="suggestion-profile-pic">
                         <div class="suggestion-info">
-                            <a th:href="@{/profile/{userId}(userId=${user.id})}"
-                               class="suggestion-username" th:text="${user.username}"></a>
-                            <form th:action="@{/follow/{userId}(userId=${user.id})}" method="POST" class="follow-form">
+                            <a th:href="@{/profile/{userId}(userId=${suggestedUser.id})}"
+                               class="suggestion-username" th:text="${suggestedUser.username}"></a>
+                            <form th:action="@{/follow/{userId}(userId=${suggestedUser.id})}" method="POST" class="follow-form">
                                 <button type="submit" class="follow-button">Follow</button>
                             </form>
                         </div>
@@ -215,7 +212,6 @@
                     </div>
                 </div>
             </section>
-
         </aside>
     </div>
 </main>
@@ -227,122 +223,6 @@
     </div>
 </footer>
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const likeForms = document.querySelectorAll('.like-form');
-
-        likeForms.forEach(form => {
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const postId = this.action.match(/\/likes\/([^/]+)\/toggle/)[1];
-                const likeBtn = this.querySelector('.like-btn');
-                const heart = likeBtn.querySelector('.heart');
-                const count = likeBtn.querySelector('.count');
-                const likeText = likeBtn.querySelector('.like-text');
-
-                try {
-                    const response = await fetch(`/likes/${postId}/toggle`, {
-                        method: 'POST',
-                        credentials: 'include',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-
-
-                        heart.textContent = data.liked ? '❤' : '♡';
-                        heart.style.color = data.liked ? 'red' : 'black';
-
-
-                        count.textContent = data.likeCount;
-
-
-                        if (likeText) {
-                            likeText.textContent = data.liked ? 'Liked' : 'Like';
-                        }
-
-
-                        if (data.liked) {
-                            likeBtn.classList.add('already-liked');
-                        } else {
-                            likeBtn.classList.remove('already-liked');
-                        }
-
-                        // Update data attribute
-                        likeBtn.setAttribute('data-liked', data.liked);
-                    }
-                } catch (error) {
-                    console.error('Error toggling like:', error);
-                }
-            });
-        });
-
-
-        function refreshLikeCounts() {
-            document.querySelectorAll('.post-card').forEach(async (postCard) => {
-                try {
-                    // Extract post ID from the like form
-                    const likeForm = postCard.querySelector('.like-form');
-                    if (!likeForm) return;
-
-                    const postId = likeForm.action.match(/\/likes\/([^/]+)\/toggle/)[1];
-
-
-                    const response = await fetch(`/likes/${postId}/status`, {
-                        method: 'GET',
-                        credentials: 'include'
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-
-                        // Update the like count
-                        const countElement = postCard.querySelector('.count');
-                        if (countElement) {
-                            countElement.textContent = data.likeCount;
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error refreshing like count:', error);
-                }
-            });
-        }
-
-
-        setInterval(refreshLikeCounts, 10000);
-
-        function updateNotificationCount() {
-            fetch('/notifications/unread-count')
-                .then(response => response.json())
-                .then(count => {
-                    const badge = document.querySelector('.notification-badge');
-                    if (count > 0) {
-                        if (!badge) {
-                            const notificationLink = document.querySelector('.notification-link');
-                            const newBadge = document.createElement('span');
-                            newBadge.className = 'notification-badge';
-                            newBadge.textContent = count;
-                            notificationLink.appendChild(newBadge);
-                        } else {
-                            badge.textContent = count;
-                        }
-                    } else if (badge) {
-                        badge.remove();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error updating notification count:', error);
-                });
-        }
-
-        setInterval(updateNotificationCount, 30000);
-        updateNotificationCount();
-    });
-</script>
+<script src="/js/script.js"></script>
 </body>
 </html>

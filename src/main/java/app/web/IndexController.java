@@ -4,6 +4,7 @@ import app.follow.service.FollowService;
 import app.message.service.MessageService;
 import app.notification.service.NotificationService;
 import app.post.service.PostService;
+import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
@@ -15,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.validation.BindingResult;
@@ -49,23 +52,21 @@ public class IndexController {
     }
 
     @GetMapping("/login")
-    public ModelAndView getLoginPage() {
-        ModelAndView modelAndView = new ModelAndView("login");
-        modelAndView.addObject("loginRequest", new LoginRequest());
-        return modelAndView;
+
+        public ModelAndView getLoginPage(@RequestParam(value = "error", required = false) String errorParam) {
+
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("login");
+            modelAndView.addObject("loginRequest", new LoginRequest());
+
+            if (errorParam != null) {
+                modelAndView.addObject("errorMessage", "Incorrect username or password!");
+            }
+
+            return modelAndView;
     }
 
-    @PostMapping("/login")
-    public String login(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpSession session) {
-        if (bindingResult.hasErrors()) {
-            return "login";
-        }
 
-        User loggedInUser = userService.login(loginRequest);
-        session.setAttribute("loggedUser", loggedInUser);
-        userService.setUserOnline(loggedInUser.getId());
-        return "redirect:/home";
-    }
 
     @GetMapping("/register")
     public ModelAndView getRegisterPage() {
@@ -85,8 +86,8 @@ public class IndexController {
     }
 
     @GetMapping("/home")
-    public ModelAndView getHomePage(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public ModelAndView getHomePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user=userService.getById(authenticationDetails.getUserId());
 
         if (user == null) {
             return new ModelAndView("redirect:/login");
@@ -109,20 +110,11 @@ public class IndexController {
         return modelAndView;
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
-        if (user != null) {
-            userService.setUserOffline(user.getId());
-        }
-        session.invalidate();
-        return "redirect:/";
-    }
 
     @PostMapping("/api/heartbeat")
     @ResponseBody
-    public ResponseEntity<Void> heartbeat(HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public ResponseEntity<Void> heartbeat(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user=userService.getById(authenticationDetails.getUserId());
         if (user != null) {
             userService.setUserOnline(user.getId());
             return ResponseEntity.ok().build();

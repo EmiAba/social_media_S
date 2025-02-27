@@ -25,16 +25,7 @@
     </div>
 </header>
 
-<header>
-    <h1>Manage Users</h1>
-    <nav>
-        <ul>
-            <li><a href="/admin">Dashboard</a></li>
-            <li><a href="/admin/posts">Manage Posts</a></li>
-            <li><a href="/admin/comments">Manage Comments</a></li>
-        </ul>
-    </nav>
-</header>
+
 
 <main>
     <table>
@@ -42,12 +33,14 @@
             <th>Username</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Registered On</th>
             <th>Actions</th>
         </tr>
         <tr th:each="userData : ${users}">
             <td th:text="${userData.username}"></td>
             <td th:text="${userData.email}"></td>
             <td th:text="${userData.role}"></td>
+            <td th:text="${#temporals.format(userData.createdAt, 'dd MMM yyyy HH:mm')}"></td>
             <td>
                 <form th:action="@{/admin/users/delete/{id}(id=${userData.id})}" method="post">
                     <input type="hidden" name="_method" value="DELETE">

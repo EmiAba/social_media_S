@@ -1,10 +1,12 @@
 package app.web;
 
 import app.comment.service.CommentService;
+import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.comment.model.Comment;
-import jakarta.servlet.http.HttpSession;
+import app.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,16 +19,18 @@ import java.util.UUID;
 public class CommentController {
 
     private final CommentService commentService;
+    private final UserService userService;
 
     @Autowired
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, UserService userService) {
         this.commentService = commentService;
+        this.userService = userService;
     }
 
 
     @PostMapping("/add")
-    public ModelAndView addComment(@RequestParam UUID postId, @RequestParam String content, HttpSession session) {
-        User user = (User) session.getAttribute("loggedUser");
+    public ModelAndView addComment(@RequestParam UUID postId, @RequestParam String content,@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user=userService.getById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
