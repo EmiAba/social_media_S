@@ -59,7 +59,6 @@ public class MessageService {
         User receiver = receiverOptional.get();
 
         Message message = new Message();
-        message.setSender(null);
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setContent(content);

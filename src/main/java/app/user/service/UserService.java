@@ -2,7 +2,6 @@ package app.user.service;
 
 import app.exceprion.DomainException;
 import app.follow.repository.FollowRepository;
-import app.notification.service.NotificationService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.model.UserRole;
@@ -148,11 +147,16 @@ public class UserService implements UserDetailsService {
     }
 
 
+
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DomainException("User with this username does not exist."));
 
         return new AuthenticationDetails(user.getId(), username, user.getPassword(), user.getRole(), user.isOnline());
     }
+
+
 
 }

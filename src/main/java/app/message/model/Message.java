@@ -22,7 +22,7 @@ public class Message {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "sender_id", nullable = false)
+    @JoinColumn(name = "sender_id", nullable=false)
     private User sender;
 
     @ManyToOne

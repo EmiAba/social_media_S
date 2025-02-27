@@ -4,6 +4,7 @@ import app.notification.model.Notification;
 import app.notification.service.NotificationService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
+import app.user.model.UserRole;
 import app.user.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,7 @@ public class NotificationController {
         model.addAttribute("notifications", notifications);
         model.addAttribute("unreadNotificationCount", unreadCount);
         model.addAttribute("user", user);
-
+       model.addAttribute("isAdmin", user.getRole() == UserRole.ADMIN);
         return "notifications";
     }
 

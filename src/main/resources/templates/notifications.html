@@ -27,7 +27,7 @@
                     </a>
                 </li>
                 <li><a href="/inbox">Inbox</a></li>
-                <li sec:authorize="hasRole('ADMIN')">
+                <li th:if="${isAdmin}">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
                 <li><a href="/logout">Logout</a></li>
