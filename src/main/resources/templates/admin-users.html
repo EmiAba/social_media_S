@@ -1,17 +1,37 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Manage Users</title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
+<!-- User Header -->
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
+                 alt="Your Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${user.username}"></span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/admin/users">Manage Users</a></li>
+                <li><a href="/admin/posts">Manage Posts</a></li>
+                <li><a href="/admin/comments">Manage Comments</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
 <header>
     <h1>Manage Users</h1>
     <nav>
         <ul>
             <li><a href="/admin">Dashboard</a></li>
             <li><a href="/admin/posts">Manage Posts</a></li>
+            <li><a href="/admin/comments">Manage Comments</a></li>
         </ul>
     </nav>
 </header>
@@ -24,20 +44,20 @@
             <th>Role</th>
             <th>Actions</th>
         </tr>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.email}"></td>
-            <td th:text="${user.role}"></td>
+        <tr th:each="userData : ${users}">
+            <td th:text="${userData.username}"></td>
+            <td th:text="${userData.email}"></td>
+            <td th:text="${userData.role}"></td>
             <td>
-                <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post">
+                <form th:action="@{/admin/users/delete/{id}(id=${userData.id})}" method="post">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit">Delete</button>
                 </form>
 
-                <form th:action="@{/admin/users/make-admin/{id}(id=${user.id})}" method="post" th:if="${user.role.name() == 'USER'}">
+                <form th:action="@{/admin/users/make-admin/{id}(id=${userData.id})}" method="post" th:if="${userData.role.name() == 'USER'}">
                     <button type="submit">Make Admin</button>
                 </form>
-                <form th:action="@{/admin/users/make-user/{id}(id=${user.id})}" method="post" th:if="${user.role.name() == 'ADMIN'}">
+                <form th:action="@{/admin/users/make-user/{id}(id=${userData.id})}" method="post" th:if="${userData.role.name() == 'ADMIN'}">
                     <button type="submit">Make User</button>
                 </form>
             </td>

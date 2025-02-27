@@ -1,11 +1,30 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Manage Posts</title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
+<!-- User Header -->
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
+                 alt="Your Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${user.username}"></span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/admin/users">Manage Users</a></li>
+                <li><a href="/admin/posts">Manage Posts</a></li>
+                <li><a href="/admin/comments">Manage Comments</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
 <header>
     <h1>Manage Posts</h1>
     <nav>
@@ -28,7 +47,7 @@
         <tr th:each="post : ${posts}">
             <td th:text="${post.content}"></td>
             <td th:text="${post.user.username}"></td>
-            <td th:text="${post.createdAt}"></td>
+            <td th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy HH:mm')}"></td>
             <td>
                 <form th:action="@{/admin/posts/delete/{id}(id=${post.id})}" th:method="post">
                     <input type="hidden" name="_method" value="DELETE">
