@@ -4,16 +4,17 @@ import app.like.service.LikeActService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.service.UserService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@RestController
+@Controller
 @RequestMapping("/likes")
 public class LikeActController {
     private final LikeActService likeActService;
@@ -25,13 +26,31 @@ public class LikeActController {
     }
 
     @PostMapping("/{postId}/toggle")
-    public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable UUID postId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user=userService.getById(authenticationDetails.getUserId());
+    public String toggleLike(@PathVariable UUID postId,
+                             @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
+                             HttpServletRequest request) {
+        User user = userService.getById(authenticationDetails.getUserId());
         if (user == null) {
-            return ResponseEntity.status(401).build();
+            return "redirect:/login";
         }
 
-        boolean liked = likeActService.toggleLike(postId, user);
+        likeActService.toggleLike(postId, user);
+
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/home");
+    }
+
+
+    @GetMapping("/{postId}/status")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getLikeStatus(@PathVariable UUID postId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = null;
+        if (authenticationDetails != null) {
+            user = userService.getById(authenticationDetails.getUserId());
+        }
+
+        boolean liked = likeActService.hasUserLikedPost(postId, user);
         long likeCount = likeActService.countLikes(postId);
 
         Map<String, Object> response = new HashMap<>();

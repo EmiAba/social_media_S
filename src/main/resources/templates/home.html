@@ -119,12 +119,14 @@
 
                     <!-- Like Section -->
                     <div class="post-actions">
-                        <form th:action="@{/likes/{postId}/toggle(postId=${post.id})}" method="POST" class="like-form">
+                        <form th:action="@{/likes/{postId}/toggle(postId=${post.id})}" method="POST">
+                            <!-- Remove the like-form class to prevent AJAX handling -->
+                            <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <button type="submit" class="like-btn"
                                     th:data-liked="${post.isLikedByUser}"
                                     th:class="${post.isLikedByUser ? 'like-btn already-liked' : 'like-btn'}">
-                                <span class="heart" th:style="${post.isLikedByUser ? 'color: red' : 'color: black'}"
-                                      th:text="${post.isLikedByUser ? '❤' : '♡'}">♡</span>
+            <span class="heart" th:style="${post.isLikedByUser ? 'color: red' : 'color: black'}"
+                  th:text="${post.isLikedByUser ? '❤' : '♡'}">♡</span>
                                 <span class="count" th:text="${post.likeCount}">0</span>
                                 <span class="like-text" th:text="${post.isLikedByUser ? 'Liked' : 'Like'}">Like</span>
                             </button>

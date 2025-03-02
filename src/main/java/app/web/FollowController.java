@@ -4,15 +4,16 @@ import app.follow.service.FollowService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.service.UserService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RestController
+@Controller
 @RequestMapping("/follow")
 public class FollowController {
 
@@ -26,26 +27,36 @@ public class FollowController {
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<String> followUser(@PathVariable UUID userId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user=userService.getById(authenticationDetails.getUserId());
+    public String followUser(@PathVariable UUID userId,
+                             @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
+                             HttpServletRequest request) {
+        User user = userService.getById(authenticationDetails.getUserId());
 
-        if (user== null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+        if (user == null) {
+            return "redirect:/login";
         }
 
         followService.followUser(user.getId(), userId);
-        return ResponseEntity.ok("User followed successfully");
+
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/home");
     }
 
-
     @PostMapping("/unfollow/{userId}")
-    public ResponseEntity<String> unfollowUser(@PathVariable UUID userId,
-                                               @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+    public String unfollowUser(@PathVariable UUID userId,
+                               @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
+                               HttpServletRequest request) {
         User user = userService.getById(authenticationDetails.getUserId());
+
         if (user == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return "redirect:/login";
         }
+
         followService.unfollowUser(user.getId(), userId);
-        return ResponseEntity.ok("User unfollowed successfully");
+
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/home");
     }
 }

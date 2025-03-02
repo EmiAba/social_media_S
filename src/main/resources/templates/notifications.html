@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/notifications.css">
 </head>
 <body>
+
 <!-- Header -->
 <header>
     <div class="header-content">
@@ -22,8 +23,7 @@
                 <li>
                     <a th:href="@{/notifications}">
                         Notifications
-                        <span th:if="${unreadNotificationCount > 0}" class="notification-badge" th:text="${unreadNotificationCount}">
-                            </span>
+                        <span th:if="${unreadNotificationCount > 0}" class="notification-badge" th:text="${unreadNotificationCount}"></span>
                     </a>
                 </li>
                 <li><a href="/inbox">Inbox</a></li>
@@ -45,16 +45,24 @@
                 <button type="submit" class="mark-all-read-btn">Mark All as Read</button>
             </form>
         </div>
+
         <div class="notifications-list" th:if="${!#lists.isEmpty(notifications)}">
             <div th:each="notification : ${notifications}" th:class="${'notification-item ' + (notification.isRead ? 'read' : 'unread')}">
                 <span class="notification-icon" th:text="${notification.type.icon}"></span>
+
                 <div class="notification-content">
                     <div class="notification-message-wrapper">
-                        <p class="notification-message" th:text="${notification.message}"></p>
-                        <span class="notification-time" th:text="${#temporals.format(notification.createdAt, 'HH:mm')}">
+                        <p class="notification-message">
+                            <span th:text="${notification.message}"></span>
+                            <span class="notification-time"
+                                  th:title="${#temporals.format(notification.createdAt, 'yyyy-MM-dd HH:mm:ss')}"
+                                  th:text="${#temporals.format(notification.createdAt, 'HH:mm')}"
+                                  style="font-size: 18px; font-weight: bold; margin-left: 15px; color: #444;">
                             </span>
+                        </p>
                     </div>
                 </div>
+
                 <form th:if="${!notification.isRead}" th:action="@{/notifications/{id}/read(id=${notification.id})}" method="post">
                     <button type="submit" class="mark-read-btn">✓ Mark as Read</button>
                 </form>
@@ -64,6 +72,7 @@
                 </form>
             </div>
         </div>
+
         <div th:if="${#lists.isEmpty(notifications)}" class="no-notifications">
             <p>You have no notifications</p>
         </div>
@@ -74,5 +83,6 @@
 <footer>
     <p>&copy; 2025 Social Media App. All rights reserved.</p>
 </footer>
+
 </body>
 </html>

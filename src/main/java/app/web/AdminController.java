@@ -45,7 +45,8 @@ public class AdminController {
         long postCount = postRepository.count();
         long onlineUsers = userRepository.countOnlineUsers();
         long commentCount = commentRepository.count();
-        long messageCount = 0;
+        userService.setUserOnline(user.getId());
+
 
         ModelAndView modelAndView = new ModelAndView("admin-dashboard");
         modelAndView.addObject("userCount", userCount);

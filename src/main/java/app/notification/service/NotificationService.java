@@ -6,6 +6,7 @@ import app.notification.repository.NotificationRepository;
 import app.user.model.User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,7 @@ public class NotificationService {
         Notification notification = Notification.builder()
                 .user(user)
                 .type(type)
+                .createdAt(LocalDateTime.now())
                 .message(message)
                 .isRead(false)
                 .build();
@@ -70,3 +72,4 @@ public class NotificationService {
         notificationRepository.deleteById(notificationId);
     }
 }
+

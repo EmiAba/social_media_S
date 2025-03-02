@@ -98,6 +98,7 @@ public class IndexController {
         int unreadMessageCount = messageService.getUnreadMessageCount(user.getId());
         List<User> suggestedUsers = followService.getSuggestedUsers(user.getId());
         List<User> followedUsers = followService.getFollowedUsers(user.getId());
+        userService.setUserOnline(user.getId());
 
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("user", user);
