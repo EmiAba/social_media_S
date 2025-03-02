@@ -11,7 +11,6 @@ import app.web.dto.RegisterRequest;
 import app.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,15 +29,15 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private  final PasswordEncoder passwordEncoder;
-    private final FollowRepository followRepository;
+
 
 
 
 @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    this.followRepository = followRepository;
+
 
 }
 
@@ -61,7 +60,7 @@ public class UserService implements UserDetailsService {
 
     public void editUserDetails(UUID userId, UserEditRequest userEditRequest){
 
-        User user=getById(userId);
+        User user=getUserById(userId);
         user.setFirstName(userEditRequest.getFirstName());
         user.setLastName(userEditRequest.getLastName());
          user.setProfilePicture(userEditRequest.getProfilePicture());
@@ -108,16 +107,11 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public User getById(UUID id) {
-
-
-        return userRepository.findById(id)
-                .orElseThrow(()-> new DomainException("User with id [%s] does not exist.". formatted(id)));
+    public User getUserById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new DomainException("User with ID " + userId + " not found."));
     }
 
-    public Optional<User> getUserById(UUID userId) {
-    return userRepository.findById(userId);
-    }
 
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -130,24 +124,6 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
         });
     }
-
-    public void setUserOffline(UUID userId) {
-        userRepository.findById(userId).ifPresent(user -> {
-            user.setOnline(false);
-            userRepository.save(user);
-        });
-    }
-
-    public void updateOnlineStatus(UUID userId, boolean isOnline) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DomainException("User not found"));
-
-        user.setOnline(isOnline);
-        userRepository.save(user);
-
-    }
-
-
 
 
 

@@ -43,7 +43,7 @@ public class MessageController {
 
     @GetMapping("/inbox")
     public ModelAndView getInbox(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -58,7 +58,7 @@ public class MessageController {
 
     @GetMapping("/send_message")
     public ModelAndView showSendMessagePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -71,27 +71,23 @@ public class MessageController {
     }
 
     @GetMapping("/inbox/{userId}")
-    public ModelAndView showDirectMessage(@PathVariable UUID userId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User currentUser = userService.getById(authenticationDetails.getUserId());
-        if (currentUser == null) {
-            return new ModelAndView("redirect:/login");
-        }
+    public ModelAndView showDirectMessage(@PathVariable UUID userId,
+                                          @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
 
-        Optional<User> recipientOpt = userService.getUserById(userId);
-        if (recipientOpt.isEmpty()) {
-            return new ModelAndView("redirect:/home");
-        }
+        User currentUser = userService.getUserById(authenticationDetails.getUserId());
 
-        User recipient = recipientOpt.get();
+
+        User recipient = userService.getUserById(userId);
+
+
         MessageRequest messageRequest = new MessageRequest();
         messageRequest.setUsername(recipient.getUsername());
+
 
         ModelAndView modelAndView = new ModelAndView("send_message");
         modelAndView.addObject("messageRequest", messageRequest);
         modelAndView.addObject("recipient", recipient);
         modelAndView.addObject("user", currentUser);
-
-
 
         return modelAndView;
     }
@@ -104,14 +100,14 @@ public class MessageController {
 
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView("send_message");
-            User user = userService.getById(authenticationDetails.getUserId());
+            User user = userService.getUserById(authenticationDetails.getUserId());
             if (user != null) {
                 modelAndView.addObject("user", user);
             }
             return modelAndView;
         }
 
-        User sender = userService.getById(authenticationDetails.getUserId());
+        User sender = userService.getUserById(authenticationDetails.getUserId());
         if (sender == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -131,7 +127,7 @@ public class MessageController {
 
     @DeleteMapping("/inbox/delete/{messageId}")
     public ModelAndView deleteMessage(@PathVariable UUID messageId, @RequestParam String content, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }

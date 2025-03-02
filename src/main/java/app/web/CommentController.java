@@ -1,6 +1,7 @@
 package app.web;
 
 import app.comment.service.CommentService;
+import app.exceprion.DomainException;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.comment.model.Comment;
@@ -30,7 +31,7 @@ public class CommentController {
 
     @PostMapping("/add")
     public ModelAndView addComment(@RequestParam UUID postId, @RequestParam String content,@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user=userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }

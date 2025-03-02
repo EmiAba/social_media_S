@@ -1,5 +1,6 @@
 package app.web;
 
+import app.exceprion.DomainException;
 import app.notification.model.Notification;
 import app.notification.service.NotificationService;
 import app.security.AuthenticationDetails;
@@ -28,7 +29,7 @@ public class NotificationController {
 
     @GetMapping
     public String showNotifications(Model model, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -45,7 +46,7 @@ public class NotificationController {
 
     @PostMapping("/{id}/read")
     public String markAsRead(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -56,7 +57,7 @@ public class NotificationController {
 
     @PostMapping("/read-all")
     public String markAllAsRead(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -67,7 +68,7 @@ public class NotificationController {
 
     @DeleteMapping("/{id}")
     public String deleteNotification(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user != null) {
             notificationService.deleteNotification(id);
         }

@@ -1,5 +1,6 @@
 package app.web;
 
+import app.exceprion.DomainException;
 import app.follow.service.FollowService;
 import app.message.service.MessageService;
 import app.notification.service.NotificationService;
@@ -88,7 +89,7 @@ public class IndexController {
 
     @GetMapping("/home")
     public ModelAndView getHomePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user=userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
 
         if (user == null) {
             return new ModelAndView("redirect:/login");
@@ -117,7 +118,7 @@ public class IndexController {
     @PostMapping("/api/heartbeat")
     @ResponseBody
     public ResponseEntity<Void> heartbeat(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user=userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user != null) {
             userService.setUserOnline(user.getId());
             return ResponseEntity.ok().build();

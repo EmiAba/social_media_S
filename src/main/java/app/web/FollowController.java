@@ -1,5 +1,6 @@
 package app.web;
 
+import app.exceprion.DomainException;
 import app.follow.service.FollowService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
@@ -30,7 +31,7 @@ public class FollowController {
     public String followUser(@PathVariable UUID userId,
                              @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
                              HttpServletRequest request) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
 
         if (user == null) {
             return "redirect:/login";
@@ -47,7 +48,7 @@ public class FollowController {
     public String unfollowUser(@PathVariable UUID userId,
                                @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
                                HttpServletRequest request) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
 
         if (user == null) {
             return "redirect:/login";

@@ -1,5 +1,6 @@
 package app.web;
 
+import app.exceprion.DomainException;
 import app.like.service.LikeActService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
@@ -29,7 +30,7 @@ public class LikeActController {
     public String toggleLike(@PathVariable UUID postId,
                              @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
                              HttpServletRequest request) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -47,7 +48,7 @@ public class LikeActController {
     public ResponseEntity<Map<String, Object>> getLikeStatus(@PathVariable UUID postId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
         User user = null;
         if (authenticationDetails != null) {
-            user = userService.getById(authenticationDetails.getUserId());
+         user = userService.getUserById(authenticationDetails.getUserId());
         }
 
         boolean liked = likeActService.hasUserLikedPost(postId, user);

@@ -1,5 +1,6 @@
 package app.web;
 
+import app.exceprion.DomainException;
 import app.follow.service.FollowService;
 import app.like.service.LikeActService;
 import app.post.model.Post;
@@ -29,20 +30,20 @@ public class PostController {
     private final CommentService commentService;
     private final FollowService followService;
     private final UserService userService;
-    private final LikeActService likeActService;
+
 
     @Autowired
-    public PostController(PostService postService, CommentService commentService, FollowService followService, UserService userService, LikeActService likeActService) {
+    public PostController(PostService postService, CommentService commentService, FollowService followService, UserService userService) {
         this.postService = postService;
         this.commentService = commentService;
         this.followService = followService;
         this.userService = userService;
-        this.likeActService = likeActService;
+
     }
 
     @PostMapping("/create")
     public String createPost(@ModelAttribute PostRequest request, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }
@@ -52,7 +53,7 @@ public class PostController {
 
     @GetMapping("/home")
     public ModelAndView getHomePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -69,7 +70,7 @@ public class PostController {
 
     @GetMapping("/post/{id}/comments")
     public ModelAndView getPostWithComments(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }
@@ -79,7 +80,7 @@ public class PostController {
         PostResponse postResponse = postService.convertToResponse(post);
 
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("user", user); // Add the user object to the model
+        modelAndView.addObject("user", user);
         modelAndView.addObject("post", postResponse);
         modelAndView.addObject("comments", comments);
         modelAndView.addObject("suggestedUsers", followService.getSuggestedUsers(user.getId()));

@@ -1,11 +1,11 @@
 package app.web;
 
+import app.exceprion.DomainException;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.web.dto.UserEditRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,7 +31,7 @@ public class UserController {
     @GetMapping("/profile")
     public ModelAndView getProfilePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
 
-        User user=userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
 
 
         if (user == null) {
@@ -49,7 +49,7 @@ public class UserController {
 
     @GetMapping("/edit-profile")
     public ModelAndView getEditProfilePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user=userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
 
         if (user == null) {
             return new ModelAndView("redirect:/login");
@@ -65,17 +65,22 @@ public class UserController {
     }
 
 
-//Ne e opraveno
     @PutMapping("/{id}/profile")
     public ModelAndView updateUserProfile(@PathVariable UUID id,
-                                          @Valid UserEditRequest userEditRequest,
-                                          BindingResult bindingResult,
-                                          HttpSession session) {
-        User user = userService.getById(id);
+                                          @Valid UserEditRequest userEditRequest,                                           BindingResult bindingResult,
+                                          @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+
+
+        User user = userService.getUserById(authenticationDetails.getUserId());
+
+
+        if (!user.getId().equals(id)) {
+            throw new DomainException("You are not authorized to edit this profile.");
+        }
+
 
         if (bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("edit_profile");
+            ModelAndView modelAndView = new ModelAndView("edit_profile");
             modelAndView.addObject("user", user);
             modelAndView.addObject("userEditRequest", userEditRequest);
             return modelAndView;
@@ -83,10 +88,6 @@ public class UserController {
 
 
         userService.editUserDetails(id, userEditRequest);
-
-
-        User updatedUser = userService.getById(id);
-        session.setAttribute("loggedUser", updatedUser);
 
         return new ModelAndView("redirect:/profile");
     }

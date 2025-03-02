@@ -49,11 +49,11 @@ public class FollowService {
     }
 
     public void followUser(UUID followerId, UUID followedId) {
-        User follower = userService.getUserById(followerId)
-                .orElseThrow(() -> new DomainException("Follower not found"));
+        User follower = userService.getUserById(followerId);
+               ;
 
-        User followed = userService.getUserById(followedId)
-                .orElseThrow(() -> new DomainException("Followed user not found"));
+        User followed = userService.getUserById(followedId);
+
 
         if (followRepository.findByFollowerAndFollowed(follower, followed).isPresent()) {
             throw new DomainException("Already following this user");
@@ -64,18 +64,16 @@ public class FollowService {
         follow.setFollowed(followed);
         followRepository.save(follow);
 
-        // send Notification for Follow
+
         notificationService.createFollowNotification(followed, follower.getUsername());
 
     }
 
 
     public void unfollowUser(UUID followerId, UUID followedId) {
-        User follower = userService.getUserById(followerId)
-                .orElseThrow(() -> new DomainException("Follower not found"));
+        User follower = userService.getUserById(followerId);
 
-        User followed = userService.getUserById(followedId)
-                .orElseThrow(() -> new DomainException("Followed user not found"));
+        User followed = userService.getUserById(followedId);
 
 
         followRepository.findByFollowerAndFollowed(follower, followed)

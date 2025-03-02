@@ -2,6 +2,7 @@ package app.web;
 
 import app.comment.model.Comment;
 import app.comment.repository.CommentRepository;
+import app.exceprion.DomainException;
 import app.post.Repository.PostRepository;
 import app.security.AuthenticationDetails;
 import app.user.repoistory.UserRepository;
@@ -36,7 +37,7 @@ public class AdminController {
 
     @GetMapping
     public ModelAndView adminDashboard(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -60,7 +61,7 @@ public class AdminController {
 
     @GetMapping("/users")
     public ModelAndView manageUsers(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -76,7 +77,7 @@ public class AdminController {
 
     @DeleteMapping("/users/delete/{id}")
     public ModelAndView deleteUser(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -87,7 +88,7 @@ public class AdminController {
 
     @PostMapping("/users/make-admin/{id}")
     public ModelAndView makeAdmin(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User currentUser = userService.getById(authenticationDetails.getUserId());
+        User currentUser = userService.getUserById(authenticationDetails.getUserId());
         if (currentUser == null || currentUser.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -102,7 +103,7 @@ public class AdminController {
 
     @PostMapping("/users/make-user/{id}")
     public ModelAndView makeUser(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User currentUser = userService.getById(authenticationDetails.getUserId());
+        User currentUser = userService.getUserById(authenticationDetails.getUserId());
         if (currentUser == null || currentUser.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -117,7 +118,7 @@ public class AdminController {
 
     @GetMapping("/posts")
     public ModelAndView managePosts(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -131,7 +132,7 @@ public class AdminController {
 
     @DeleteMapping("/posts/delete/{id}")
     public ModelAndView deletePost(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -142,7 +143,7 @@ public class AdminController {
 
     @GetMapping("/comments")
     public ModelAndView manageComments(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
@@ -159,7 +160,7 @@ public class AdminController {
 
     @DeleteMapping("/comments/delete/{id}")
     public ModelAndView deleteComment(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getById(authenticationDetails.getUserId());
+        User user = userService.getUserById(authenticationDetails.getUserId());
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }

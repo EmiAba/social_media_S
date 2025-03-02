@@ -11,7 +11,7 @@
 <!-- Header -->
 <header>
     <div class="header-content">
-        <!-- For the header section -->
+
         <div class="user-welcome">
             <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
                  alt="Your Profile" class="header-profile-pic">
@@ -38,7 +38,7 @@
 <!-- Main Content -->
 <main>
     <section class="profile-container">
-        <!-- Edit Profile Form Card -->
+
         <div class="profile-card">
             <h2>Edit Your Profile</h2>
             <form th:action="@{'/{id}/profile'(id=${user.id})}" method="post" th:object="${userEditRequest}">

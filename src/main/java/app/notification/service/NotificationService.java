@@ -41,11 +41,7 @@ public class NotificationService {
         createNotification(recipient, NotificationType.FOLLOW, followerUsername + " started following you");
     }
 
-    public void createOnlineStatusNotification(User recipient, String username, boolean isOnline) {
-        NotificationType type = isOnline ? NotificationType.USER_ONLINE : NotificationType.USER_OFFLINE;
-        String status = isOnline ? " is now online" : " went offline";
-        createNotification(recipient, type, username + status);
-    }
+
 
     private void createNotification(User user, NotificationType type, String message) {
         Notification notification = Notification.builder()
