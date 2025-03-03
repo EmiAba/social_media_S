@@ -32,12 +32,14 @@ public class FollowController {
                              @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
                              HttpServletRequest request) {
         User user = userService.getUserById(authenticationDetails.getUserId());
-
         if (user == null) {
             return "redirect:/login";
         }
 
-        followService.followUser(user.getId(), userId);
+
+        if (!user.getId().equals(userId)) {
+            followService.followUser(user.getId(), userId);
+        }
 
 
         String referer = request.getHeader("Referer");

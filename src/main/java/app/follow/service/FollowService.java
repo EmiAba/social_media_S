@@ -80,5 +80,10 @@ public class FollowService {
                 .ifPresent(followRepository::delete);
     }
 
+    public boolean isFollowing(UUID followerId, UUID followedId) {
+        User follower = userService.getUserById(followerId);
+        User followed = userService.getUserById(followedId);
 
+        return followRepository.findByFollowerAndFollowed(follower, followed).isPresent();
+    }
 }

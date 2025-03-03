@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/view_profile.css">
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${user.profilePicture != null ? user.profilePicture : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png'}"
+                 alt="Your Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${user.username}"></span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/notifications">Notifications</a></li>
+                <li><a href="/inbox">Inbox</a></li>
+                <li th:if="${isAdmin}"><a href="/admin">Admin Dashboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main>
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-banner"></div>
+            <div class="profile-info">
+                <div class="profile-picture-container">
+                    <img th:src="${profileUser.profilePicture != null ? profileUser.profilePicture : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png'}"
+                         alt="Profile Picture" class="profile-picture">
+                </div>
+                <div class="profile-details">
+                    <!-- Full name display with username -->
+                    <h1 class="profile-name">
+                        <span th:if="${profileUser.firstName != null}" th:text="${profileUser.firstName}"></span>
+                        <span th:if="${profileUser.lastName != null}" th:text="${' ' + profileUser.lastName}"></span>
+                        <span th:text="${' (' + profileUser.username + ')'}"></span>
+                    </h1>
+
+                    <!-- Bio -->
+                    <p class="profile-bio" th:text="${profileUser.bio != null ? profileUser.bio : 'No bio available'}"></p>
+
+                    <div class="profile-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Member since:</span>
+                            <span class="meta-value" th:text="${profileUser.createdAt != null ? #temporals.format(profileUser.createdAt, 'dd MMM yyyy') : 'Unknown'}"></span>
+                        </div>
+
+                        <!-- Full name -->
+                        <div class="meta-item" th:if="${profileUser.firstName != null || profileUser.lastName != null}">
+                            <span class="meta-label">Full name:</span>
+                            <span class="meta-value">
+                                <span th:if="${profileUser.firstName != null}" th:text="${profileUser.firstName}"></span>
+                                <span th:if="${profileUser.lastName != null}" th:text="${' ' + profileUser.lastName}"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Follow/Unfollow Button -->
+                    <div class="profile-actions" th:if="${user.id != profileUser.id}">
+                        <form th:if="${!isFollowing}" th:action="@{/follow/{userId}(userId=${profileUser.id})}" method="POST" class="follow-form">
+                            <button type="submit" class="follow-button">Follow</button>
+                        </form>
+
+                        <form th:if="${isFollowing}" th:action="@{/follow/unfollow/{userId}(userId=${profileUser.id})}" method="POST" class="follow-form">
+                            <button type="submit" class="follow-button">Unfollow</button>
+                        </form>
+
+                        <!-- Send Message Button -->
+                        <a th:href="@{/inbox/{friendId}(friendId=${profileUser.id})}" class="message-button">
+                            Send Message
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-content">
+
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-value" th:text="${userPosts != null ? userPosts.size() : '0'}">0</span>
+                    <span class="stat-label">Posts</span>
+                </div>
+                <div class="stat-item">
+
+                    <span class="stat-value" th:text="${profileUser.followers != null ? profileUser.followers.size() : '0'}">0</span>
+                    <span class="stat-label">Followers</span>
+                </div>
+                <div class="stat-item">
+
+                    <span class="stat-value" th:text="${profileUser.following != null ? profileUser.following.size() : '0'}">0</span>
+                    <span class="stat-label">Following</span>
+                </div>
+            </div>
+
+            <!-- User's Latest Post -->
+            <div class="user-posts">
+                <h2>Latest Post</h2>
+
+
+                <div th:if="${!#lists.isEmpty(userPosts)}" class="post-card">
+                    <div class="post-header">
+                        <img th:src="${profileUser.profilePicture != null ? profileUser.profilePicture : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png'}"
+                             alt="Profile Picture" class="post-profile-pic">
+                        <div class="post-info">
+                            <h3 th:text="${profileUser.username}"></h3>
+                            <span class="post-date" th:text="${userPosts[0].createdAt != null ? #temporals.format(userPosts[0].createdAt, 'dd MMM yyyy, hh:mm a') : ''}"></span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p th:text="${userPosts[0].content}"></p>
+
+
+                    </div>
+
+                </div>
+
+                <!-- No posts message -->
+                <p th:if="${#lists.isEmpty(userPosts)}" class="no-posts-message">This user hasn't posted anything yet.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2025 Social Media App. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

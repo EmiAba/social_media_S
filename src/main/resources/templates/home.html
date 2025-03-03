@@ -62,7 +62,7 @@
 
         <!-- Main Feed -->
         <section class="main-feed">
-            <!-- Create Post Section -->
+            <!-- Post Section -->
             <div class="create-post">
                 <div class="post-form-header">
                     <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : user.profilePicture}"
@@ -179,11 +179,14 @@
                 <h3>Suggested Users</h3>
                 <div class="user-suggestions">
                     <div th:if="${not #lists.isEmpty(suggestedUsers)}" th:each="suggestedUser : ${suggestedUsers}" class="suggested-user">
-                        <img th:src="${#strings.isEmpty(suggestedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : suggestedUser.profilePicture}"
-                             alt="User Profile" class="suggestion-profile-pic">
+                        <!-- Make only the profile picture clickable -->
+                        <a th:href="@{/profile/{userId}(userId=${suggestedUser.id})}">
+                            <img th:src="${#strings.isEmpty(suggestedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : suggestedUser.profilePicture}"
+                                 alt="User Profile" class="suggestion-profile-pic">
+                        </a>
                         <div class="suggestion-info">
-                            <a th:href="@{/profile/{userId}(userId=${suggestedUser.id})}"
-                               class="suggestion-username" th:text="${suggestedUser.username}"></a>
+                            <!-- Remove the link from username, keep it as plain text -->
+                            <span class="suggestion-username" th:text="${suggestedUser.username}"></span>
                             <form th:action="@{/follow/{userId}(userId=${suggestedUser.id})}" method="POST" class="follow-form">
                                 <button type="submit" class="follow-button">Follow</button>
                             </form>
@@ -200,9 +203,13 @@
                 <h3>Online Friends</h3>
                 <div class="friends-list">
                     <div th:each="friend : ${followedUsers}" class="friend-item">
-                        <img th:src="${#strings.isEmpty(friend.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : friend.profilePicture}"
-                             alt="Friend Profile" class="friend-profile-pic">
+                        <!-- Make only the profile picture clickable -->
+                        <a th:href="@{/profile/{userId}(userId=${friend.id})}">
+                            <img th:src="${#strings.isEmpty(friend.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : friend.profilePicture}"
+                                 alt="Friend Profile" class="friend-profile-pic">
+                        </a>
                         <div class="friend-info">
+                            <!-- Remove the link from friend name, keep it as plain text -->
                             <span class="friend-name" th:text="${friend.username}"></span>
                             <span class="online-status"
                                   th:text="${friend.online ? '🟢 Online' : '🔴 Offline'}"></span>
@@ -210,7 +217,7 @@
                         <a th:href="@{/inbox/{friendId}(friendId=${friend.id})}"
                            class="message-friend">💬</a>
 
-                        <!-- Unfollow Button -->
+
                         <form th:action="@{/follow/unfollow/{friendId}(friendId=${friend.id})}" method="post">
                             <button type="submit" class="unfollow-btn">❌ Unfollow</button>
                         </form>

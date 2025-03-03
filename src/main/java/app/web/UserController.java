@@ -1,6 +1,9 @@
 package app.web;
 
 import app.exceprion.DomainException;
+import app.follow.service.FollowService;
+import app.post.model.Post;
+import app.post.service.PostService;
 import app.security.AuthenticationDetails;
 import app.user.model.User;
 import app.user.model.UserRole;
@@ -17,16 +20,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
 
 public class UserController {
     private final UserService userService;
+    private final FollowService followService;
+    private final PostService postService;
 @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, FollowService followService, PostService postService) {
         this.userService = userService;
-    }
+    this.followService = followService;
+    this.postService = postService;
+}
 
     @GetMapping("/profile")
     public ModelAndView getProfilePage(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
@@ -94,5 +102,32 @@ public class UserController {
 
 
 
+    @GetMapping("/profile/{userId}")
+    public ModelAndView viewUserProfile(@PathVariable UUID userId,
+                                        @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        // Get the profile owner (the user being viewed)
+        User profileUser = userService.getUserById(userId);
 
+        // Get the current logged-in user
+        User currentUser = userService.getUserById(authenticationDetails.getUserId());
+
+        // Check if the current user is following the profile user
+        boolean isFollowing = followService.isFollowing(currentUser.getId(), profileUser.getId());
+
+        // Get the profile user's posts
+        List<Post> userPosts = postService.getPostsByUserId(profileUser.getId());
+
+
+        Post latestPost = userPosts.isEmpty() ? null : userPosts.get(0);
+
+        ModelAndView modelAndView = new ModelAndView("view_profile");
+        modelAndView.addObject("profileUser", profileUser);
+        modelAndView.addObject("user", currentUser);
+        modelAndView.addObject("isAdmin", currentUser.getRole() == UserRole.ADMIN);
+        modelAndView.addObject("isFollowing", isFollowing);
+        modelAndView.addObject("userPosts", userPosts);
+        modelAndView.addObject("latestPost", latestPost);
+
+        return modelAndView;
+    }
 }
