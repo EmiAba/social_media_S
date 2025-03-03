@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface LikeActRepository extends JpaRepository<LikeAct, UUID> {
-    long countByPost(Post post);
+   // long countByPost(Post post);
     Optional<LikeAct> findByUserAndPost(User user, Post post);
     @Query("SELECT COUNT(l) FROM LikeAct l JOIN l.post p WHERE p.user.id = :userId AND p.createdAt >= :since")
     int countLikesReceivedByUserSince(@Param("userId") UUID userId, @Param("since") LocalDateTime since);

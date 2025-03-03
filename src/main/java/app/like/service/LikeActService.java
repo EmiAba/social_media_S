@@ -67,8 +67,10 @@ public class LikeActService {
 
 
     public long countLikes(UUID postId) {
-        return postRepository.findById(postId)
-                .map(likeActRepository::countByPost)
-                .orElse(0L);
+        return likeActRepository.countByPostId(postId);
+
+                //postRepository.findById(postId)
+                //.map(likeActRepository::countByPost)
+                //.orElse(0L);
     }
 }

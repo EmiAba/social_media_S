@@ -105,16 +105,16 @@ public class UserController {
     @GetMapping("/profile/{userId}")
     public ModelAndView viewUserProfile(@PathVariable UUID userId,
                                         @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        // Get the profile owner (the user being viewed)
+
         User profileUser = userService.getUserById(userId);
 
-        // Get the current logged-in user
+
         User currentUser = userService.getUserById(authenticationDetails.getUserId());
 
-        // Check if the current user is following the profile user
+
         boolean isFollowing = followService.isFollowing(currentUser.getId(), profileUser.getId());
 
-        // Get the profile user's posts
+
         List<Post> userPosts = postService.getPostsByUserId(profileUser.getId());
 
 

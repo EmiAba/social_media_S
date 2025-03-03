@@ -23,7 +23,8 @@ public class FollowService {
 
 
     @Autowired
-    public FollowService(FollowRepository followRepository, UserService userService, UserRepository userRepository, NotificationService notificationService) {
+    public FollowService(FollowRepository followRepository, UserService userService,
+                         UserRepository userRepository, NotificationService notificationService) {
         this.followRepository = followRepository;
         this.userService = userService;
         this.userRepository = userRepository;
