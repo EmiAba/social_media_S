@@ -42,13 +42,19 @@ public class PostController {
     }
 
     @PostMapping("/create")
-    public String createPost(@ModelAttribute PostRequest request, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+    public ModelAndView createPost(
+            PostRequest request,
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails
+    ) {
         User user = userService.getUserById(authenticationDetails.getUserId());
+
         if (user == null) {
-            return "redirect:/login";
+            return new ModelAndView("redirect:/login");
         }
+
         postService.createPost(request, user);
-        return "redirect:/posts/home";
+
+        return new ModelAndView("redirect:/posts/home");
     }
 
     @GetMapping("/home")

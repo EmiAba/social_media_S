@@ -94,31 +94,27 @@ public class MessageController {
 
     @PostMapping("/send")
     public ModelAndView sendMessage(
-            @ModelAttribute("messageRequest") MessageRequest messageRequest,
+            MessageRequest messageRequest,
             BindingResult bindingResult,
-            @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-
-        if (bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView("send_message");
-            User user = userService.getUserById(authenticationDetails.getUserId());
-            if (user != null) {
-                modelAndView.addObject("user", user);
-            }
-            return modelAndView;
-        }
-
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails
+    ) {
         User sender = userService.getUserById(authenticationDetails.getUserId());
+
         if (sender == null) {
             return new ModelAndView("redirect:/login");
         }
 
+        if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView("send_message");
+            modelAndView.addObject("user", sender);
+            return modelAndView;
+        }
+
         Optional<User> recipientOpt = userService.getUserByUsername(messageRequest.getUsername());
+
         if (recipientOpt.isPresent()) {
             User recipient = recipientOpt.get();
-
             messageService.saveMessage(messageRequest.getUsername(), messageRequest.getContent(), sender);
-
-            System.out.println("Creating notification for message from " + sender.getUsername() + " to " + recipient.getUsername());
             notificationService.createMessageNotification(recipient, sender.getUsername());
         }
 
@@ -126,8 +122,12 @@ public class MessageController {
     }
 
     @DeleteMapping("/inbox/delete/{messageId}")
-    public ModelAndView deleteMessage(@PathVariable UUID messageId, @RequestParam String content, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+    public ModelAndView deleteMessage(
+            @PathVariable UUID messageId,
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails
+    ) {
         User user = userService.getUserById(authenticationDetails.getUserId());
+
         if (user == null) {
             return new ModelAndView("redirect:/login");
         }

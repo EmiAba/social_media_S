@@ -27,21 +27,21 @@ public class LikeActController {
     }
 
     @PostMapping("/{postId}/toggle")
-    public String toggleLike(@PathVariable UUID postId,
-                             @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
-                             HttpServletRequest request) {
+    public String toggleLike(
+            @PathVariable UUID postId,
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
+            @RequestHeader(value = "Referer", required = false) String referer
+    ) {
         User user = userService.getUserById(authenticationDetails.getUserId());
+
         if (user == null) {
             return "redirect:/login";
         }
 
         likeActService.toggleLike(postId, user);
 
-
-        String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/home");
     }
-
 
     @GetMapping("/{postId}/status")
     @ResponseBody

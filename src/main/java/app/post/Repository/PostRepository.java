@@ -27,6 +27,8 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @Query("SELECT COUNT(p) FROM Post p WHERE p.user.id = :userId AND p.createdAt >= :since")
     int countPostsByUserSince(@Param("userId") UUID userId, @Param("since") LocalDateTime since);
+
+    List<Post> findByUserId(UUID userId);
 }
 
 

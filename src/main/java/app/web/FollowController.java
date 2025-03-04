@@ -47,9 +47,11 @@ public class FollowController {
     }
 
     @PostMapping("/unfollow/{userId}")
-    public String unfollowUser(@PathVariable UUID userId,
-                               @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
-                               HttpServletRequest request) {
+    public String unfollowUser(
+            @PathVariable UUID userId,
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails,
+            @RequestHeader(value = "Referer", required = false) String referer
+    ) {
         User user = userService.getUserById(authenticationDetails.getUserId());
 
         if (user == null) {
@@ -58,8 +60,6 @@ public class FollowController {
 
         followService.unfollowUser(user.getId(), userId);
 
-
-        String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/home");
     }
 }

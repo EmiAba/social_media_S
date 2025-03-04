@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,33 +29,24 @@ public class NotificationController {
     }
 
     @GetMapping
-    public String showNotifications(Model model, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+    public ModelAndView showNotifications(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
         User user = userService.getUserById(authenticationDetails.getUserId());
+
         if (user == null) {
-            return "redirect:/login";
+            return new ModelAndView("redirect:/login");
         }
 
         List<Notification> notifications = notificationService.getUserNotifications(user);
         int unreadCount = notificationService.getUnreadCount(user);
 
-        model.addAttribute("notifications", notifications);
-        model.addAttribute("unreadNotificationCount", unreadCount);
-        model.addAttribute("user", user);
-       model.addAttribute("isAdmin", user.getRole() == UserRole.ADMIN);
-        return "notifications";
+        ModelAndView modelAndView = new ModelAndView("notifications");
+        modelAndView.addObject("notifications", notifications);
+        modelAndView.addObject("unreadNotificationCount", unreadCount);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("isAdmin", user.getRole() == UserRole.ADMIN);
+
+        return modelAndView;
     }
-
-    @PostMapping("/{id}/read")
-    public String markAsRead(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getUserById(authenticationDetails.getUserId());
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        notificationService.markAsRead(id);
-        return "redirect:/notifications";
-    }
-
     @PostMapping("/read-all")
     public String markAllAsRead(@AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
         User user = userService.getUserById(authenticationDetails.getUserId());

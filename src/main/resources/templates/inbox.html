@@ -61,7 +61,7 @@
                         <a th:href="@{/inbox/{userId}(userId=${message.sender.id})}" class="reply-button">Reply</a>
 
 
-                        <form th:action="@{/inbox/delete/{messageId}(messageId=${message.id})}" method="post">
+                        <form th:action="@{/inbox/delete/{messageId}(messageId=${message.id})}" th:method="post">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="content" th:value="${message.content}">
                             <button type="submit" class="delete-message-btn">🗑 Delete</button>

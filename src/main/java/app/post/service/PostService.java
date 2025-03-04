@@ -61,7 +61,7 @@ public class PostService {
             return null;
         }
 
-        // Convert comments
+
         List<CommentResponse> commentResponses = (post.getComments() != null)
                 ? post.getComments().stream()
                 .map(comment -> CommentResponse.builder()
@@ -74,10 +74,10 @@ public class PostService {
                 .collect(Collectors.toList())
                 : new ArrayList<>();
 
-        // Get the current like count directly from database
+
         long likeCount = likeActService.countLikes(post.getId());
 
-        // Check if current user has liked this post
+
         boolean isLikedByUser = false;
         if (currentUser != null) {
             isLikedByUser = likeActService.hasUserLikedPost(post.getId(), currentUser);
@@ -93,8 +93,8 @@ public class PostService {
                 .createdAt(post.getCreatedAt())
                 .comments(commentResponses)
                 .profilePicture(post.getUser().getProfilePicture())
-                .likeCount(likeCount)          // Add current like count
-                .isLikedByUser(isLikedByUser)  // Add user's like status
+                .likeCount(likeCount)
+                .isLikedByUser(isLikedByUser)
                 .build();
     }
 
@@ -106,5 +106,10 @@ public class PostService {
     public Post getPostEntityById(UUID id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new DomainException("Post not found with id: " + id));
+    }
+
+
+    public List<Post> getPostsByUserId(UUID userId) {
+        return postRepository.findByUserId(userId);
     }
 }
