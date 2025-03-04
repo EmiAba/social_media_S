@@ -17,8 +17,7 @@ import java.util.UUID;
 public class Notification {
 
     @Id
-    @GeneratedValue
-    @UuidGenerator
+    @GeneratedValue(strategy= GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
