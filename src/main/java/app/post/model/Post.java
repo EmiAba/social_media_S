@@ -37,6 +37,10 @@ public class Post {
     @Column(nullable = false)
     private PostType postType;
 
+    private boolean visible=false;
+    @Column(length = 500)
+    private String moderationReason;
+
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 

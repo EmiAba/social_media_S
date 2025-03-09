@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Moderation History</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${#strings.isEmpty(user.profilePicture) ? '/images/default-avatar.png' : user.profilePicture}"
+                 alt="Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${user.username}">Admin</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/admin/users">Manage Users</a></li>
+                <li><a href="/admin/posts">Manage Posts</a></li>
+                <li><a href="/admin/comments">Manage Comments</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="admin-container">
+    <div class="moderation-sidebar">
+        <h2>Moderation Tools</h2>
+        <ul class="sidebar-nav">
+            <li><a href="/admin/moderation">Pending Posts</a></li>
+            <li><a href="/admin/moderation/history" class="active">My Moderation History</a></li>
+        </ul>
+    </div>
+
+    <div class="moderation-content">
+        <h1>My Moderation History</h1>
+        <p class="info-text">This page shows all content you've reviewed and moderated.</p>
+
+        <div class="filter-controls">
+            <form th:action="@{/admin/moderation/history}" method="get">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="status">Status:</label>
+                        <select id="status" name="status">
+                            <option value="">All</option>
+                            <option value="APPROVED" th:selected="${param.status != null && param.status[0] == 'APPROVED'}">Approved</option>
+                            <option value="REJECTED" th:selected="${param.status != null && param.status[0] == 'REJECTED'}">Rejected</option>
+                            <option value="PENDING" th:selected="${param.status != null && param.status[0] == 'PENDING'}">Pending</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateFrom">From Date:</label>
+                        <input type="date" id="dateFrom" name="dateFrom" th:value="${param.dateFrom != null ? param.dateFrom[0] : ''}">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateTo">To Date:</label>
+                        <input type="date" id="dateTo" name="dateTo" th:value="${param.dateTo != null ? param.dateTo[0] : ''}">
+                    </div>
+                    <div class="filter-group">
+                        <button type="submit" class="btn btn-filter">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${moderationHistory == null or moderationHistory.isEmpty()}" class="info-message">
+            <p>No moderation history found.</p>
+        </div>
+
+        <div th:unless="${moderationHistory == null or moderationHistory.isEmpty()}" class="moderation-history">
+            <table class="moderation-table">
+                <thead>
+                <tr>
+                    <th>Post ID</th>
+                    <th>User ID</th>
+                    <th>Content</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Reason</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${moderationHistory}">
+                    <td><a th:href="@{/posts/{id}(id=${item.postId})}" th:text="${item.postId}">Post ID</a></td>
+                    <td><a th:href="@{/admin/moderation/history/{id}(id=${item.userId})}" th:text="${item.userId}">User ID</a></td>
+                    <td class="content-cell" th:text="${#strings.abbreviate(item.content, 100)}">Content</td>
+                    <td>
+                        <span th:if="${item.status.name() == 'APPROVED'}" class="status-badge approved">Approved</span>
+                        <span th:if="${item.status.name() == 'REJECTED'}" class="status-badge rejected">Rejected</span>
+                        <span th:if="${item.status.name() == 'PENDING'}" class="status-badge pending">Pending</span>
+                    </td>
+                    <td th:text="${#temporals.format(item.createdOn, 'yyyy-MM-dd HH:mm')}">Date</td>
+                    <td th:text="${item.moderationReason != null ? item.moderationReason : '-'}">Reason</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Social Media App. Admin Panel.</p>
+</footer>
+</body>
+</html>

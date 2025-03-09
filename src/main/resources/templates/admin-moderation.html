@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Content Moderation</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <div class="user-welcome">
+            <img th:src="${#strings.isEmpty(user.profilePicture) ? '/images/default-avatar.png' : user.profilePicture}"
+                 alt="Profile" class="header-profile-pic">
+            <h1>Welcome, <span th:text="${user.username}">Admin</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/admin/users">Manage Users</a></li>
+                <li><a href="/admin/posts">Manage Posts</a></li>
+                <li><a href="/admin/comments">Manage Comments</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="admin-container">
+    <div class="moderation-sidebar">
+        <h2>Moderation Tools</h2>
+        <ul class="sidebar-nav">
+            <li><a href="/admin/moderation" class="active">Pending Posts</a></li>
+            <li><a href="/admin/moderation/history">Moderation History</a></li>
+        </ul>
+    </div>
+
+    <div class="moderation-content">
+        <h1>Content Moderation</h1>
+
+        <!-- Add Filter Form -->
+        <div class="filter-controls">
+            <form th:action="@{/admin/moderation}" method="get">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="userId">User ID:</label>
+                        <input type="text" id="userId" name="userId" th:value="${param.userId != null ? param.userId[0] : ''}">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateFrom">From Date:</label>
+                        <input type="date" id="dateFrom" name="dateFrom" th:value="${param.dateFrom != null ? param.dateFrom[0] : ''}">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateTo">To Date:</label>
+                        <input type="date" id="dateTo" name="dateTo" th:value="${param.dateTo != null ? param.dateTo[0] : ''}">
+                    </div>
+                    <div class="filter-group">
+                        <button type="submit" class="btn btn-filter">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${pendingPosts == null or pendingPosts.isEmpty()}" class="info-message">
+            <p>No posts pending moderation at this time.</p>
+        </div>
+
+        <div th:unless="${pendingPosts == null or pendingPosts.isEmpty()}" class="pending-posts">
+            <div th:each="post : ${pendingPosts}" class="moderation-card">
+                <div class="post-header">
+                    <h3>Post ID: <span th:text="${post.postId}">Unknown ID</span></h3>
+                    <p>User: <span th:text="${post.userId}">Unknown User</span></p>
+                    <p>Created: <span th:text="${post.createdOn != null ? #temporals.format(post.createdOn, 'yyyy-MM-dd HH:mm') : 'No Date'}">-</span></p>
+                </div>
+
+                <div class="post-content">
+                    <p th:text="${post.content}">No Content</p>
+                </div>
+
+                <div class="moderation-actions">
+                    <form th:action="@{/admin/moderation/approve/{id}(id=${post.postId})}" th:method="post">
+                        <button type="submit" class="btn btn-approve">Approve</button>
+                    </form>
+
+                    <form th:action="@{/admin/moderation/reject/{id}(id=${post.postId})}" th:method="post" class="reject-form">
+                        <input type="text" name="reason" placeholder="Reason for rejection" required>
+                        <button type="submit" class="btn btn-reject">Reject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Social Media App. Admin Panel.</p>
+</footer>
+</body>
+</html>

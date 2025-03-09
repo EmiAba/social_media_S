@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Manage Comments</title>
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body sec:authorize="hasRole('ADMIN')">
 <!-- User Header -->
@@ -19,7 +19,8 @@
                 <li><a href="/admin/users">Manage Users</a></li>
                 <li><a href="/admin/posts">Manage Posts</a></li>
                 <li><a href="/admin/comments" class="active">Manage Comments</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/admin/moderation">Content Moderation</a></li>
+            <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -37,7 +38,7 @@
         <tr th:each="comment : ${comments}">
             <td th:text="${comment.content}"></td>
             <td th:text="${comment.user.username}"></td>
-            <td th:text="${comment.post.content}"></td> <!-- Optional -->
+            <td th:text="${comment.post.content}"></td>
             <td th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy HH:mm')}"></td>
             <td>
                 <form th:action="@{/admin/comments/delete/{id}(id=${comment.id})}" method="post">

@@ -1,22 +1,28 @@
 package app.web;
 
+import app.client.model.ModerationStatus;
+import app.client.service.ModerationService;
 import app.comment.model.Comment;
 import app.comment.repository.CommentRepository;
-import app.exceprion.DomainException;
 import app.post.Repository.PostRepository;
+import app.post.service.PostService;
 import app.security.AuthenticationDetails;
 import app.user.repoistory.UserRepository;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.service.UserService;
+import app.web.dto.ContentModerationResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @PreAuthorize("hasRole('ADMIN')")
@@ -26,13 +32,18 @@ public class AdminController {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+    private final ModerationService moderationService;
+    private final PostService postService;
 
     public AdminController(UserRepository userRepository, PostRepository postRepository,
-                           CommentRepository commentRepository, UserService userService) {
+                           CommentRepository commentRepository, UserService userService,
+                           ModerationService moderationService, PostService postService) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userService = userService;
+        this.moderationService = moderationService;
+        this.postService = postService;
     }
 
     @GetMapping
@@ -167,5 +178,103 @@ public class AdminController {
 
         commentRepository.deleteById(id);
         return new ModelAndView("redirect:/admin/comments");
+    }
+
+
+    @GetMapping("/moderation")
+    public ModelAndView moderationDashboard(
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String dateFrom,
+            @RequestParam(required = false) String dateTo,
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+
+        User user = userService.getUserById(authenticationDetails.getUserId());
+        if (user == null || user.getRole() != UserRole.ADMIN) {
+            return new ModelAndView("redirect:/home");
+        }
+
+        List<ContentModerationResponse> pendingPosts =
+                moderationService.getFilteredPendingPosts(userId, dateFrom, dateTo);
+
+        ModelAndView modelAndView = new ModelAndView("admin-moderation");
+        modelAndView.addObject("pendingPosts", pendingPosts);
+        modelAndView.addObject("user", user);
+
+        return modelAndView;
+    }
+
+    @PostMapping("/moderation/approve/{postId}")
+    public ModelAndView approvePost(@PathVariable UUID postId, @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getUserById(authenticationDetails.getUserId());
+        if (user == null || user.getRole() != UserRole.ADMIN) {
+            return new ModelAndView("redirect:/home");
+        }
+
+        moderationService.approvePost(postId);
+
+
+        postService.updatePostModerationStatus(postId);
+
+        return new ModelAndView("redirect:/admin/moderation");
+    }
+
+    @PostMapping("/moderation/reject/{postId}")
+    public ModelAndView rejectPost(@PathVariable UUID postId,
+                                   @RequestParam String reason,
+                                   @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getUserById(authenticationDetails.getUserId());
+        if (user == null || user.getRole() != UserRole.ADMIN) {
+            return new ModelAndView("redirect:/home");
+        }
+
+        moderationService.rejectPost(postId, reason);
+
+
+        postService.updatePostModerationStatus(postId);
+
+        return new ModelAndView("redirect:/admin/moderation");
+    }
+
+    @GetMapping("/moderation/history/{userId}")
+    public ModelAndView userModerationHistory(@PathVariable UUID userId,
+                                              @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+        User user = userService.getUserById(authenticationDetails.getUserId());
+        if (user == null || user.getRole() != UserRole.ADMIN) {
+            return new ModelAndView("redirect:/home");
+        }
+
+        User targetUser = userRepository.findById(userId).orElse(null);
+        List<ContentModerationResponse> moderationHistory = moderationService.getUserModerationHistory(userId);
+
+        ModelAndView modelAndView = new ModelAndView("admin-moderation-history");
+        modelAndView.addObject("targetUser", targetUser);
+        modelAndView.addObject("moderationHistory", moderationHistory);
+        modelAndView.addObject("user", user);
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/moderation/history")
+    public ModelAndView moderationHistory(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String dateFrom,
+            @RequestParam(required = false) String dateTo,
+            @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
+
+        User user = userService.getUserById(authenticationDetails.getUserId());
+        if (user == null || user.getRole() != UserRole.ADMIN) {
+            return new ModelAndView("redirect:/home");
+        }
+
+
+        List<ContentModerationResponse> moderationHistory =
+                moderationService.getFilteredModerationHistory(status, dateFrom, dateTo);
+
+        ModelAndView modelAndView = new ModelAndView("admin-moderation-history");
+        modelAndView.addObject("moderationHistory", moderationHistory);
+        modelAndView.addObject("user", user);
+
+        return modelAndView;
     }
 }

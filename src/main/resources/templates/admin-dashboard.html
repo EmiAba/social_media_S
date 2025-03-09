@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
-<body>
+<body sec:authorize="hasRole('ADMIN')">
 <header>
     <div class="header-content">
         <div class="user-welcome">
@@ -18,6 +18,7 @@
                 <li><a href="/admin/users">Manage Users</a></li>
                 <li><a href="/admin/posts">Manage Posts</a></li>
                 <li><a href="/admin/comments">Manage Comments</a></li>
+                <li><a href="/admin/moderation">Content Moderation</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>

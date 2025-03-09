@@ -3,14 +3,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
+		<version>3.4.3</version>
 		<relativePath/>
 	</parent>
-	<groupId>smart-wallet</groupId>
-	<artifactId>smart-wallet-application</artifactId>
+	<groupId>social-media</groupId>
+	<artifactId>social-media-application</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Smart Wallet Application</name>
-	<description>Smart Wallet Application</description>
+	<name>Social Media Application</name>
+	<description>Social Media Application</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -45,7 +45,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<version>3.4.3</version>
 		</dependency>
 
 		<dependency>
@@ -73,7 +72,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
-			<version>5.7.1</version>
+			<version>6.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -90,6 +89,19 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 			<version>4.2.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>app</groupId>
+			<artifactId>activity-svc</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>classes</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
+			<version>4.1.0</version>
 		</dependency>
 	</dependencies>
 	<build>

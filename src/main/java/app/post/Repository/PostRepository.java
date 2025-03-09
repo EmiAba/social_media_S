@@ -29,6 +29,13 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     int countPostsByUserSince(@Param("userId") UUID userId, @Param("since") LocalDateTime since);
 
     List<Post> findByUserId(UUID userId);
+
+
+
+    List<Post> findByVisibleTrue();
+
+
+    List<Post> findByUserIdAndVisibleTrue(UUID userId);
 }
 
 

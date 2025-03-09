@@ -155,3 +155,175 @@ footer {
     padding: 15px;
     margin-top: auto;
 }
+
+
+/* ADMIN MODERATION */
+.admin-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.moderation-sidebar {
+    width: 250px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-right: 20px;
+}
+
+.moderation-content {
+    flex-grow: 1;
+}
+
+.moderation-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    color: black;
+}
+
+.moderation-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.reject-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reject-form input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 10px;
+}
+
+.sidebar-nav li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-nav li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav li a.active {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+}
+
+
+
+/* Moderation History Styles */
+.moderation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.moderation-table th,
+.moderation-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.moderation-table th {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: 600;
+}
+
+.moderation-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.moderation-table .content-cell {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.status-approved {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.status-rejected {
+    background-color: rgba(244, 67, 54, 0.1);
+}
+
+.status-pending {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.filter-controls {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.filter-group label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.btn-filter {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-filter:hover {
+    background-color: #303f9f;
+}

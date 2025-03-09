@@ -28,4 +28,10 @@ public class PostResponse {
      private boolean isLikedByUser;
     private long likeCount;
 
+
+
+    private boolean visible;
+    private String moderationStatus;
+    private String moderationReason;
+
         }
