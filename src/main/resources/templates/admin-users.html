@@ -41,15 +41,15 @@
             <td th:text="${userData.role}"></td>
             <td th:text="${#temporals.format(userData.createdAt, 'dd MMM yyyy HH:mm')}"></td>
             <td>
-                <form th:action="@{/admin/users/delete/{id}(id=${userData.id})}" method="post">
+                <form th:action="@{/admin/users/delete/{id}(id=${userData.id})}" th:method="post">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit">Delete</button>
                 </form>
 
-                <form th:action="@{/admin/users/make-admin/{id}(id=${userData.id})}" method="post" th:if="${userData.role.name() == 'USER'}">
+                <form th:action="@{/admin/users/make-admin/{id}(id=${userData.id})}" th:method="post" th:if="${userData.role.name() == 'USER'}">
                     <button type="submit">Make Admin</button>
                 </form>
-                <form th:action="@{/admin/users/make-user/{id}(id=${userData.id})}" method="post" th:if="${userData.role.name() == 'ADMIN'}">
+                <form th:action="@{/admin/users/make-user/{id}(id=${userData.id})}" th:method="post" th:if="${userData.role.name() == 'ADMIN'}">
                     <button type="submit">Make User</button>
                 </form>
             </td>

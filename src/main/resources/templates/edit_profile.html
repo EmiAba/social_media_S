@@ -41,7 +41,7 @@
 
         <div class="profile-card">
             <h2>Edit Your Profile</h2>
-            <form th:action="@{'/{id}/profile'(id=${user.id})}" method="post" th:object="${userEditRequest}">
+            <form th:action="@{'/{id}/profile'(id=${user.id})}" th:method="post" th:object="${userEditRequest}">
                 <input type="hidden" name="_method" value="PUT">
 
                 <label for="firstName">First Name:</label>

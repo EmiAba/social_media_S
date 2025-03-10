@@ -28,7 +28,7 @@
     </div>
 </header>
 
-<!-- Main Content -->
+
 <main>
     <div class="profile-container">
         <!-- Profile Header -->
@@ -40,14 +40,14 @@
                          alt="Profile Picture" class="profile-picture">
                 </div>
                 <div class="profile-details">
-                    <!-- Full name display with username -->
+
                     <h1 class="profile-name">
                         <span th:if="${profileUser.firstName != null}" th:text="${profileUser.firstName}"></span>
                         <span th:if="${profileUser.lastName != null}" th:text="${' ' + profileUser.lastName}"></span>
                         <span th:text="${' (' + profileUser.username + ')'}"></span>
                     </h1>
 
-                    <!-- Bio -->
+
                     <p class="profile-bio" th:text="${profileUser.bio != null ? profileUser.bio : 'No bio available'}"></p>
 
                     <div class="profile-meta">
@@ -56,7 +56,7 @@
                             <span class="meta-value" th:text="${profileUser.createdAt != null ? #temporals.format(profileUser.createdAt, 'dd MMM yyyy') : 'Unknown'}"></span>
                         </div>
 
-                        <!-- Full name -->
+
                         <div class="meta-item" th:if="${profileUser.firstName != null || profileUser.lastName != null}">
                             <span class="meta-label">Full name:</span>
                             <span class="meta-value">
@@ -66,17 +66,17 @@
                         </div>
                     </div>
 
-                    <!-- Follow/Unfollow Button -->
+
                     <div class="profile-actions" th:if="${user.id != profileUser.id}">
-                        <form th:if="${!isFollowing}" th:action="@{/follow/{userId}(userId=${profileUser.id})}" method="POST" class="follow-form">
+                        <form th:if="${!isFollowing}" th:action="@{/follow/{userId}(userId=${profileUser.id})}" th:method="POST" class="follow-form">
                             <button type="submit" class="follow-button">Follow</button>
                         </form>
 
-                        <form th:if="${isFollowing}" th:action="@{/follow/unfollow/{userId}(userId=${profileUser.id})}" method="POST" class="follow-form">
+                        <form th:if="${isFollowing}" th:action="@{/follow/unfollow/{userId}(userId=${profileUser.id})}" th:method="POST" class="follow-form">
                             <button type="submit" class="follow-button">Unfollow</button>
                         </form>
 
-                        <!-- Send Message Button -->
+
                         <a th:href="@{/inbox/{friendId}(friendId=${profileUser.id})}" class="message-button">
                             Send Message
                         </a>

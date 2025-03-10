@@ -69,7 +69,7 @@
                          alt="Your Profile" class="post-user-pic">
                     <h2>Create a Post</h2>
                 </div>
-                <form th:action="@{/posts/create}" method="POST" th:object="${postRequest}" class="post-form">
+                <form th:action="@{/posts/create}" th:method="POST" th:object="${postRequest}" class="post-form">
                     <div class="post-type-selector">
                         <label>Post Type:</label>
                         <select name="postType" required>
@@ -82,7 +82,7 @@
                         <div class="image-upload">
                             <label for="imageUrl">Add Image URL:</label>
                             <input type="text" id="imageUrl" name="imageUrl"
-                                   placeholder="Enter image URL (e.g., https://example.com/image.jpg)">
+                                   placeholder="Enter image URL ">
                         </div>
                         <button type="submit" class="post-button">Post</button>
                     </div>
@@ -92,7 +92,7 @@
             <!-- Posts Feed -->
             <div class="posts-container">
                 <div th:each="post : ${posts}" class="post-card">
-                    <!-- Post Header -->
+
                     <div class="post-header">
                         <div class="post-user-info">
                             <img th:src="${#strings.isEmpty(post.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : post.profilePicture}"
@@ -119,8 +119,8 @@
 
                     <!-- Like Section -->
                     <div class="post-actions">
-                        <form th:action="@{/likes/{postId}/toggle(postId=${post.id})}" method="POST">
-                            <!-- Remove the like-form class to prevent AJAX handling -->
+                        <form th:action="@{/likes/{postId}/toggle(postId=${post.id})}" th:method="POST">
+
                             <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <button type="submit" class="like-btn"
                                     th:data-liked="${post.isLikedByUser}"
@@ -135,7 +135,7 @@
 
                     <!-- Comments Section -->
                     <div class="comments-section">
-                        <!-- Existing Comments -->
+
                         <div th:if="${not #lists.isEmpty(post.comments)}" class="comments-list">
                             <div th:each="comment : ${post.comments}" class="comment">
                                 <div class="comment-header">
@@ -179,15 +179,15 @@
                 <h3>Suggested Users</h3>
                 <div class="user-suggestions">
                     <div th:if="${not #lists.isEmpty(suggestedUsers)}" th:each="suggestedUser : ${suggestedUsers}" class="suggested-user">
-                        <!-- Make only the profile picture clickable -->
+
                         <a th:href="@{/profile/{userId}(userId=${suggestedUser.id})}">
                             <img th:src="${#strings.isEmpty(suggestedUser.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : suggestedUser.profilePicture}"
                                  alt="User Profile" class="suggestion-profile-pic">
                         </a>
                         <div class="suggestion-info">
-                            <!-- Remove the link from username, keep it as plain text -->
+
                             <span class="suggestion-username" th:text="${suggestedUser.username}"></span>
-                            <form th:action="@{/follow/{userId}(userId=${suggestedUser.id})}" method="POST" class="follow-form">
+                            <form th:action="@{/follow/{userId}(userId=${suggestedUser.id})}" th:method="POST" class="follow-form">
                                 <button type="submit" class="follow-button">Follow</button>
                             </form>
                         </div>
@@ -203,13 +203,13 @@
                 <h3>Online Friends</h3>
                 <div class="friends-list">
                     <div th:each="friend : ${followedUsers}" class="friend-item">
-                        <!-- Make only the profile picture clickable -->
+
                         <a th:href="@{/profile/{userId}(userId=${friend.id})}">
                             <img th:src="${#strings.isEmpty(friend.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png' : friend.profilePicture}"
                                  alt="Friend Profile" class="friend-profile-pic">
                         </a>
                         <div class="friend-info">
-                            <!-- Remove the link from friend name, keep it as plain text -->
+
                             <span class="friend-name" th:text="${friend.username}"></span>
                             <span class="online-status"
                                   th:text="${friend.online ? '🟢 Online' : '🔴 Offline'}"></span>
@@ -218,7 +218,7 @@
                            class="message-friend">💬</a>
 
 
-                        <form th:action="@{/follow/unfollow/{friendId}(friendId=${friend.id})}" method="post">
+                        <form th:action="@{/follow/unfollow/{friendId}(friendId=${friend.id})}" th:method="post">
                             <button type="submit" class="unfollow-btn">❌ Unfollow</button>
                         </form>
                     </div>

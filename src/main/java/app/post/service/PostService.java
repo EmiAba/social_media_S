@@ -139,15 +139,7 @@ public class PostService {
         return convertToResponse(updatedPost, currentUser);
     }
 
-    public void deletePost(UUID postId, User currentUser) {
-        Post post = getPostEntityById(postId);
 
-        if (!post.getUser().getId().equals(currentUser.getId())) {
-            throw new DomainException("You can only delete your own posts");
-        }
-
-        postRepository.delete(post);
-    }
 
     public List<PostResponse> getAdminAllPosts(User admin) {
         return postRepository.findAll()

@@ -40,7 +40,7 @@
         <p class="info-text">This page shows all content you've reviewed and moderated.</p>
 
         <div class="filter-controls">
-            <form th:action="@{/admin/moderation/history}" method="get">
+            <form th:action="@{/admin/moderation/history}" th:method="get">
                 <div class="filter-row">
                     <div class="filter-group">
                         <label for="status">Status:</label>
@@ -84,8 +84,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="item : ${moderationHistory}">
-                    <td><a th:href="@{/posts/{id}(id=${item.postId})}" th:text="${item.postId}">Post ID</a></td>
-                    <td><a th:href="@{/admin/moderation/history/{id}(id=${item.userId})}" th:text="${item.userId}">User ID</a></td>
+                    <td th:text="${item.postId}">Post ID</td>
+                    <td th:text="${item.userId}">User ID</td>
                     <td class="content-cell" th:text="${#strings.abbreviate(item.content, 100)}">Content</td>
                     <td>
                         <span th:if="${item.status.name() == 'APPROVED'}" class="status-badge approved">Approved</span>

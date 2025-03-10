@@ -36,7 +36,7 @@
         <h2>Send Message to <span th:text="${recipient != null ? recipient.username : ''}"></span></h2>
 
         <!-- Send Message Form -->
-        <form th:action="@{/send}" th:object="${messageRequest}" method="post">
+        <form th:action="@{/send}" th:object="${messageRequest}" th:method="post">
 
             <div th:if="${recipient != null}" class="form-group">
                 <input type="hidden" th:field="*{username}">

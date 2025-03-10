@@ -41,7 +41,7 @@
     <div class="notifications-container">
         <div class="notifications-header">
             <h2>Your Notifications</h2>
-            <form th:if="${!#lists.isEmpty(notifications)}" th:action="@{/notifications/read-all}" method="post">
+            <form th:if="${!#lists.isEmpty(notifications)}" th:action="@{/notifications/read-all}" th:method="post">
                 <button type="submit" class="mark-all-read-btn">Mark All as Read</button>
             </form>
         </div>
@@ -63,10 +63,10 @@
                     </div>
                 </div>
 
-                <form th:if="${!notification.isRead}" th:action="@{/notifications/{id}/read(id=${notification.id})}" method="post">
+                <form th:if="${!notification.isRead}" th:action="@{/notifications/{id}/read(id=${notification.id})}" th:method="post">
                     <button type="submit" class="mark-read-btn">✓ Mark as Read</button>
                 </form>
-                <form th:action="@{/notifications/{id}(id=${notification.id})}" method="post">
+                <form th:action="@{/notifications/{id}(id=${notification.id})}" th:method="post">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" class="delete-btn">🗑 Delete</button>
                 </form>
