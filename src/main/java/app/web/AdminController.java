@@ -1,6 +1,5 @@
 package app.web;
 
-import app.client.model.ModerationStatus;
 import app.client.service.ModerationService;
 import app.comment.model.Comment;
 import app.comment.repository.CommentRepository;
@@ -15,14 +14,11 @@ import app.web.dto.ContentModerationResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Controller
 @PreAuthorize("hasRole('ADMIN')")
@@ -58,7 +54,6 @@ public class AdminController {
         long onlineUsers = userRepository.countOnlineUsers();
         long commentCount = commentRepository.count();
         userService.setUserOnline(user.getId());
-
 
         ModelAndView modelAndView = new ModelAndView("admin-dashboard");
         modelAndView.addObject("userCount", userCount);
@@ -160,7 +155,6 @@ public class AdminController {
         }
 
         List<Comment> comments = commentRepository.findAll();
-        System.out.println("Comments Retrieved: " + comments.size());
 
         ModelAndView modelAndView = new ModelAndView("admin-comments");
         modelAndView.addObject("comments", comments);
@@ -179,7 +173,6 @@ public class AdminController {
         commentRepository.deleteById(id);
         return new ModelAndView("redirect:/admin/comments");
     }
-
 
     @GetMapping("/moderation")
     public ModelAndView moderationDashboard(
@@ -211,8 +204,6 @@ public class AdminController {
         }
 
         moderationService.approvePost(postId);
-
-
         postService.updatePostModerationStatus(postId);
 
         return new ModelAndView("redirect:/admin/moderation");
@@ -228,8 +219,6 @@ public class AdminController {
         }
 
         moderationService.rejectPost(postId, reason);
-
-
         postService.updatePostModerationStatus(postId);
 
         return new ModelAndView("redirect:/admin/moderation");
@@ -254,7 +243,6 @@ public class AdminController {
         return modelAndView;
     }
 
-
     @GetMapping("/moderation/history")
     public ModelAndView moderationHistory(
             @RequestParam(required = false) String status,
@@ -266,7 +254,6 @@ public class AdminController {
         if (user == null || user.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
-
 
         List<ContentModerationResponse> moderationHistory =
                 moderationService.getFilteredModerationHistory(status, dateFrom, dateTo);

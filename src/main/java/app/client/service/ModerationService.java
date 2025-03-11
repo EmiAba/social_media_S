@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -89,6 +90,7 @@ public class ModerationService {
                     .collect(Collectors.toList());
         }
 
+
         if (dateTo != null && !dateTo.isEmpty()) {
             LocalDate toDate = LocalDate.parse(dateTo);
             LocalDate nextDay = toDate.plusDays(1);
@@ -98,14 +100,21 @@ public class ModerationService {
                     .collect(Collectors.toList());
         }
 
+
+        pendingPosts = pendingPosts.stream()
+                .sorted((a, b) -> {
+                    if (a.getCreatedOn() == null) return 1;
+                    if (b.getCreatedOn() == null) return -1;
+                    return b.getCreatedOn().compareTo(a.getCreatedOn());
+                })
+                .collect(Collectors.toList());
+
         return pendingPosts;
     }
-
     public List<ContentModerationResponse> getFilteredModerationHistory(String status, String dateFrom, String dateTo) {
-
         List<ContentModerationResponse> moderationHistory = getAllModerationHistory();
 
-
+        // Apply status filter if provided
         if (status != null && !status.isEmpty()) {
             ModerationStatus statusEnum = ModerationStatus.valueOf(status);
             moderationHistory = moderationHistory.stream()
@@ -115,23 +124,30 @@ public class ModerationService {
 
 
         if (dateFrom != null && !dateFrom.isEmpty()) {
-            LocalDate fromDate = LocalDate.parse(dateFrom);
+            LocalDateTime fromDate = LocalDate.parse(dateFrom).atStartOfDay();
             moderationHistory = moderationHistory.stream()
                     .filter(item -> item.getCreatedOn() != null &&
-                            !item.getCreatedOn().toLocalDate().isBefore(fromDate))
+                            !item.getCreatedOn().isBefore(fromDate))
                     .collect(Collectors.toList());
         }
 
 
         if (dateTo != null && !dateTo.isEmpty()) {
-            LocalDate toDate = LocalDate.parse(dateTo);
-
-            LocalDate nextDay = toDate.plusDays(1);
+            LocalDateTime toDate = LocalDate.parse(dateTo).plusDays(1).atStartOfDay();
             moderationHistory = moderationHistory.stream()
                     .filter(item -> item.getCreatedOn() != null &&
-                            item.getCreatedOn().toLocalDate().isBefore(nextDay))
+                            item.getCreatedOn().isBefore(toDate))
                     .collect(Collectors.toList());
         }
+
+
+        moderationHistory = moderationHistory.stream()
+                .sorted((a, b) -> {
+                    if (a.getCreatedOn() == null) return 1;
+                    if (b.getCreatedOn() == null) return -1;
+                    return b.getCreatedOn().compareTo(a.getCreatedOn());
+                })
+                .collect(Collectors.toList());
 
         return moderationHistory;
     }
