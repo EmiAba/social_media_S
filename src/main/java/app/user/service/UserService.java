@@ -33,13 +33,13 @@ public class UserService implements UserDetailsService {
 
 
 
-@Autowired
+    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
 
 
-}
+    }
 
     public User register(RegisterRequest registerRequest){
 
@@ -63,8 +63,8 @@ public class UserService implements UserDetailsService {
         User user=getUserById(userId);
         user.setFirstName(userEditRequest.getFirstName());
         user.setLastName(userEditRequest.getLastName());
-         user.setProfilePicture(userEditRequest.getProfilePicture());
-         user.setBio(userEditRequest.getBio());
+        user.setProfilePicture(userEditRequest.getProfilePicture());
+        user.setBio(userEditRequest.getBio());
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
 

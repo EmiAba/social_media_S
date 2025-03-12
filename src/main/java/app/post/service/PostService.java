@@ -4,6 +4,7 @@ import app.client.model.ModerationStatus;
 import app.client.service.ModerationService;
 import app.exceprion.DomainException;
 import app.like.service.LikeActService;
+import app.notification.service.NotificationService;
 import app.post.Repository.PostRepository;
 import app.post.model.Post;
 import app.user.model.User;
@@ -30,14 +31,16 @@ public class PostService {
     private final UserService userService;
     private final LikeActService likeActService;
     private final ModerationService moderationService;
+    private final NotificationService notificationService;
 
     @Autowired
     public PostService(PostRepository postRepository, UserService userService,
-                       LikeActService likeActService, ModerationService moderationService) {
+                       LikeActService likeActService, ModerationService moderationService, NotificationService notificationService) {
         this.postRepository = postRepository;
         this.userService = userService;
         this.likeActService = likeActService;
         this.moderationService = moderationService;
+        this.notificationService = notificationService;
     }
 
     public PostResponse createPost(PostRequest request, User user) {

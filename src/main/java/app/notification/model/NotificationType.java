@@ -4,9 +4,10 @@ public enum NotificationType {
     MESSAGE("💬"),
     LIKE("❤️"),
     FOLLOW("👤"),
-    COMMENT("💭"),
-    USER_ONLINE("🟢"),
-    USER_OFFLINE("🔴");
+    COMMENT("💭");
+
+
+
 
     private final String icon;
 
@@ -24,8 +25,8 @@ public enum NotificationType {
             case LIKE -> username + " liked your post";
             case FOLLOW -> username + " started following you";
             case COMMENT -> username + " commented on your post";
-            case USER_ONLINE -> username + " is now online";
-            case USER_OFFLINE -> username + " went offline";
+
+
         };
     }
 }

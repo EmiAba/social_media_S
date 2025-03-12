@@ -3,7 +3,9 @@ package app.web;
 import app.client.service.ModerationService;
 import app.comment.model.Comment;
 import app.comment.repository.CommentRepository;
+import app.message.service.MessageService;
 import app.post.Repository.PostRepository;
+import app.post.model.Post;
 import app.post.service.PostService;
 import app.security.AuthenticationDetails;
 import app.user.repoistory.UserRepository;
@@ -30,16 +32,18 @@ public class AdminController {
     private final UserService userService;
     private final ModerationService moderationService;
     private final PostService postService;
+    private final MessageService messageService;
 
     public AdminController(UserRepository userRepository, PostRepository postRepository,
                            CommentRepository commentRepository, UserService userService,
-                           ModerationService moderationService, PostService postService) {
+                           ModerationService moderationService, PostService postService, MessageService messageService) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.moderationService = moderationService;
         this.postService = postService;
+        this.messageService = messageService;
     }
 
     @GetMapping
@@ -213,17 +217,28 @@ public class AdminController {
     public ModelAndView rejectPost(@PathVariable UUID postId,
                                    @RequestParam String reason,
                                    @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {
-        User user = userService.getUserById(authenticationDetails.getUserId());
-        if (user == null || user.getRole() != UserRole.ADMIN) {
+        User admin = userService.getUserById(authenticationDetails.getUserId());
+        if (admin == null || admin.getRole() != UserRole.ADMIN) {
             return new ModelAndView("redirect:/home");
         }
 
+        // Get the post first to find its author
+        Post post = postService.getPostEntityById(postId);
+        User postAuthor = post.getUser();
+
+        // Perform moderation
         moderationService.rejectPost(postId, reason);
         postService.updatePostModerationStatus(postId);
 
+
+        String messageContent = "Your post has been removed due to content policy violations.\n\n" +
+                "Reason: " + reason + "\n\n" +
+                "If you have any questions, please contact the admin/moderation team.";
+
+        messageService.saveMessage(postAuthor.getUsername(), messageContent, admin);
+
         return new ModelAndView("redirect:/admin/moderation");
     }
-
     @GetMapping("/moderation/history/{userId}")
     public ModelAndView userModerationHistory(@PathVariable UUID userId,
                                               @AuthenticationPrincipal AuthenticationDetails authenticationDetails) {

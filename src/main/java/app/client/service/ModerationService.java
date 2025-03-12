@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -46,8 +45,6 @@ public class ModerationService {
         return moderationClient.getAllModerationHistory();
     }
 
-
-
     public ContentModerationResponse approvePost(UUID postId) {
         ModerationDecisionRequest request = new ModerationDecisionRequest();
         request.setPostId(postId);
@@ -69,86 +66,79 @@ public class ModerationService {
     public List<ContentModerationResponse> getFilteredPendingPosts(String userId, String dateFrom, String dateTo) {
         List<ContentModerationResponse> pendingPosts = getPendingPosts();
 
-
         if (userId != null && !userId.isEmpty()) {
-            try {
-                UUID userUuid = UUID.fromString(userId);
-                pendingPosts = pendingPosts.stream()
-                        .filter(post -> userUuid.equals(post.getUserId()))
-                        .collect(Collectors.toList());
-            } catch (IllegalArgumentException e) {
-
-            }
+            pendingPosts = filterByUserId(pendingPosts, userId);
         }
 
+        pendingPosts = applyDateFilters(pendingPosts, dateFrom, dateTo);
+        pendingPosts = sortByCreationDateDesc(pendingPosts);
+
+        return pendingPosts;
+    }
+
+    public List<ContentModerationResponse> getFilteredModerationHistory(String status, String dateFrom, String dateTo) {
+        List<ContentModerationResponse> moderationHistory = getAllModerationHistory();
+
+        if (status != null && !status.isEmpty()) {
+            moderationHistory = filterByStatus(moderationHistory, status);
+        }
+
+        moderationHistory = applyDateFilters(moderationHistory, dateFrom, dateTo);
+        moderationHistory = sortByCreationDateDesc(moderationHistory);
+
+        return moderationHistory;
+    }
+
+
+
+    private List<ContentModerationResponse> filterByUserId(List<ContentModerationResponse> posts, String userId) {
+        try {
+            UUID userUuid = UUID.fromString(userId);
+            return posts.stream()
+                    .filter(post -> userUuid.equals(post.getUserId()))
+                    .collect(Collectors.toList());
+        } catch (IllegalArgumentException e) {
+            return posts;
+        }
+    }
+
+    private List<ContentModerationResponse> filterByStatus(List<ContentModerationResponse> posts, String status) {
+        ModerationStatus statusEnum = ModerationStatus.valueOf(status);
+        return posts.stream()
+                .filter(item -> item.getStatus() == statusEnum)
+                .collect(Collectors.toList());
+    }
+
+    private List<ContentModerationResponse> applyDateFilters(List<ContentModerationResponse> posts, String dateFrom, String dateTo) {
+        List<ContentModerationResponse> result = posts;
 
         if (dateFrom != null && !dateFrom.isEmpty()) {
             LocalDate fromDate = LocalDate.parse(dateFrom);
-            pendingPosts = pendingPosts.stream()
+            result = result.stream()
                     .filter(post -> post.getCreatedOn() != null &&
                             !post.getCreatedOn().toLocalDate().isBefore(fromDate))
                     .collect(Collectors.toList());
         }
 
-
         if (dateTo != null && !dateTo.isEmpty()) {
             LocalDate toDate = LocalDate.parse(dateTo);
             LocalDate nextDay = toDate.plusDays(1);
-            pendingPosts = pendingPosts.stream()
+            result = result.stream()
                     .filter(post -> post.getCreatedOn() != null &&
                             post.getCreatedOn().toLocalDate().isBefore(nextDay))
                     .collect(Collectors.toList());
         }
 
-
-        pendingPosts = pendingPosts.stream()
-                .sorted((a, b) -> {
-                    if (a.getCreatedOn() == null) return 1;
-                    if (b.getCreatedOn() == null) return -1;
-                    return b.getCreatedOn().compareTo(a.getCreatedOn());
-                })
-                .collect(Collectors.toList());
-
-        return pendingPosts;
+        return result;
     }
-    public List<ContentModerationResponse> getFilteredModerationHistory(String status, String dateFrom, String dateTo) {
-        List<ContentModerationResponse> moderationHistory = getAllModerationHistory();
 
-        // Apply status filter if provided
-        if (status != null && !status.isEmpty()) {
-            ModerationStatus statusEnum = ModerationStatus.valueOf(status);
-            moderationHistory = moderationHistory.stream()
-                    .filter(item -> item.getStatus() == statusEnum)
-                    .collect(Collectors.toList());
-        }
-
-
-        if (dateFrom != null && !dateFrom.isEmpty()) {
-            LocalDateTime fromDate = LocalDate.parse(dateFrom).atStartOfDay();
-            moderationHistory = moderationHistory.stream()
-                    .filter(item -> item.getCreatedOn() != null &&
-                            !item.getCreatedOn().isBefore(fromDate))
-                    .collect(Collectors.toList());
-        }
-
-
-        if (dateTo != null && !dateTo.isEmpty()) {
-            LocalDateTime toDate = LocalDate.parse(dateTo).plusDays(1).atStartOfDay();
-            moderationHistory = moderationHistory.stream()
-                    .filter(item -> item.getCreatedOn() != null &&
-                            item.getCreatedOn().isBefore(toDate))
-                    .collect(Collectors.toList());
-        }
-
-
-        moderationHistory = moderationHistory.stream()
+    private List<ContentModerationResponse> sortByCreationDateDesc(List<ContentModerationResponse> posts) {
+        return posts.stream()
                 .sorted((a, b) -> {
                     if (a.getCreatedOn() == null) return 1;
                     if (b.getCreatedOn() == null) return -1;
                     return b.getCreatedOn().compareTo(a.getCreatedOn());
                 })
                 .collect(Collectors.toList());
-
-        return moderationHistory;
     }
 }
